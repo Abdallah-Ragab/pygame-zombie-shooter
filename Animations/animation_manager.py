@@ -6,10 +6,12 @@ class AnimationManager:
         self.play_animation(default_animation)
 
     def play_animation(self, name):
+        print("playing animation: ", name)
         self.active_animation = self.animations[name]
 
     def frame(self):
         if self.active_animation.END_FLAG:
+            self.active_animation.reset()
             self.active_animation = self.animations[self.default_animation]
             self.active_animation.reset()
         yield from self.active_animation.generator()

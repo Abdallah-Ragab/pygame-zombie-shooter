@@ -19,6 +19,9 @@ class Player(pygame.sprite.Sprite):
         },
         default_animation="idle",
     )
+
+    base_speed = 2
+
     def __init__(self, x, y, width, height, color, speed, director):
         super().__init__()
 
@@ -32,6 +35,8 @@ class Player(pygame.sprite.Sprite):
         self.width = width
         self.height = height
 
+        self.x_speed = 0
+
 
     @property
     def image(self):
@@ -40,7 +45,7 @@ class Player(pygame.sprite.Sprite):
         return frame.image
 
     def update(self):
-        self.rect.x += self.speed
+        self.rect.x += self.x_speed
 
         if self.rect.x > self.director.width:
             self.rect.x = -self.width
@@ -51,11 +56,11 @@ class Player(pygame.sprite.Sprite):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 print("left pressed")
-                self.speed = -2
+                self.x_speed = -self.base_speed*self.speed
                 self.animation_manager.play_animation("idle_walk_idle")
             if event.key == pygame.K_RIGHT:
                 print("right pressed")
-                self.speed = 2
+                self.x_speed = self.base_speed*self.speed
                 self.animation_manager.play_animation("idle_walk_idle")
             if event.key == pygame.K_SPACE:
                 self.animation_manager.play_animation("attack")
@@ -65,14 +70,17 @@ class Player(pygame.sprite.Sprite):
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 print("left released")
-                self.speed = 0
+                self.x_speed = 0
                 if event.key in PRESSED_KEYS and self.animation_manager.active_animation.name == "idle_walk_idle":
                     self.animation_manager.active_animation.skip()
             if event.key in PRESSED_KEYS and event.key == pygame.K_RIGHT:
                 print("right released")
-                self.speed = 0
+                self.x_speed = 0
                 if self.animation_manager.active_animation.name == "idle_walk_idle":
-                    self.animation_manager.active_animation.skip()
+                    if self.animation_manager.active_animation.active_animation.name == "idle_to_walk":
+                        self.animation_manager.active_animation.skip(2)
+                    elif self.animation_manager.active_animation.active_animation.name == "walk":
+                        self.animation_manager.active_animation.skip(1)
 
             PRESSED_KEYS.remove(event.key)
 

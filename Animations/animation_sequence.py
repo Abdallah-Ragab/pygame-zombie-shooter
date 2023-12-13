@@ -9,12 +9,10 @@ class AnimationSequence:
     def append(self, animation):
         self.queue.append(animation)
 
-    def skip(self, to=None):
+    def skip(self, count=1):
         old = self.queue.copy()
-        if to:
-            self.queue = self.queue[:to]
-        else:
-            self.queue.pop(0)
+        for _ in range(count):
+            self.end_animation()
         print("skipped: ", [a.name for a in old], " -> ", [a.name for a in self.queue])
 
     @property
@@ -30,15 +28,16 @@ class AnimationSequence:
         if self.queue:
             return self.queue[0]
 
+    def end_animation(self):
+        self.active_animation.reset()
+        self.queue.pop(0)
+        self.active_animation.reset()
     def generator(self):
         if self.active_animation.END_FLAG:
-            if self.active_animation.loop:
-                self.active_animation.reset()
-            else:
-                self.queue.pop(0)
+            self.active_animation.reset()
+            if not self.active_animation.loop:
+                self.end_animation()
         yield from self.active_animation.generator()
-        # if self.active_animation.PRE_END_FLAG and self.PRE_END_FLAG:
-        #     pass
 
     def reset(self):
         self.queue = self.animations.copy()
