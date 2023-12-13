@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite):
     def image(self):
         frame = self.animation_manager.frame().__next__()
         print('frame: ', frame)
-        return frame.image
+        return pygame.transform.scale(frame.image, (self.width, self.height))
 
     def update(self):
         self.apply_speed()
