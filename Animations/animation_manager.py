@@ -13,9 +13,7 @@ class AnimationManager:
 
     def frame(self):
         if self.active_animation.END_FLAG:
-            self.reset_animation()
-            self.active_animation = self.animations[self.default_animation]
-            self.reset_animation()
+            self.play_animation(self.default_animation)
         yield from self.active_animation.generator()
 
     def reset_animation(self):
