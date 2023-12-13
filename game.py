@@ -27,6 +27,8 @@ class Game(Scene):
 
         self.PlayerGroup.draw(screen, window_scale)
 
+    def foo(self):
+        pass
 
 class Pause(Scene):
     def __init__(self, director):
