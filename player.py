@@ -1,14 +1,24 @@
 import pygame
-from animation import Animation
+from Animations import Animation, AnimationSequence, AnimationManager
+
+PRESSED_KEYS = []
 
 class Player(pygame.sprite.Sprite):
-    animations = {
-        "idle": Animation("idle", "C:\\Users\\BigBoss\\Desktop\\zombie\\idle", loop=True),
-        "idle_to_walk": Animation("idle_to_walk", "C:\\Users\\BigBoss\\Desktop\\zombie\\idle to walk", loop=True),
-        "walk": Animation("walk", "C:\\Users\\BigBoss\\Desktop\\zombie\\walk"),
-        "walk_inverse": Animation("walk_inverse", "C:\\Users\\BigBoss\\Desktop\\zombie\\walk", inverse=True),
-        "attack": Animation("attack", "C:\\Users\\BigBoss\\Desktop\\zombie\\attack"),
-    }
+    animation_manager = AnimationManager(
+        animations={
+            "idle": Animation("idle", "C:\\Users\\BigBoss\\Desktop\\zombie\\idle"),
+            "idle_walk_idle" : AnimationSequence(
+                                    name="idle_walk_idle",
+                                    animations=[
+                                        Animation("idle_to_walk", "C:\\Users\\BigBoss\\Desktop\\zombie\\idle to walk"),
+                                        Animation("walk", "C:\\Users\\BigBoss\\Desktop\\zombie\\walk", loop=True),
+                                        Animation("walk_to_idle", "C:\\Users\\BigBoss\\Desktop\\zombie\\idle to walk", inverse=True),
+                                    ],
+                                ),
+            "attack": Animation("attack", "C:\\Users\\BigBoss\\Desktop\\zombie\\attack"),
+        },
+        default_animation="idle",
+    )
     def __init__(self, x, y, width, height, color, speed, director):
         super().__init__()
 
@@ -21,46 +31,50 @@ class Player(pygame.sprite.Sprite):
         self.director = director
         self.width = width
         self.height = height
+
+
     @property
     def image(self):
-        frame = self.animation_object.generator().__next__()
+        frame = self.animation_manager.frame().__next__()
         print('frame: ', frame)
         return frame.image
 
-    @property
-    def animation_object(self):
-        return self.animations[self.animation]
-
     def update(self):
         self.rect.x += self.speed
-        if self.animation_object.ENDED:
-            print('*'*20)
-            print('animation: ', self.animation, ' ended')
-            print('*'*20)
 
-
-        # if self.rect.x > self.director.width:
-        #     self.rect.x = -self.width
-        # if self.rect.x < -self.width:
-        #     self.rect.x = self.director.width
+        if self.rect.x > self.director.width:
+            self.rect.x = -self.width
+        if self.rect.x < -self.width:
+            self.rect.x = self.director.width
 
     def event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
+                print("left pressed")
                 self.speed = -2
-                self.set_animation("walk_inverse")
+                self.animation_manager.play_animation("idle_walk_idle")
             if event.key == pygame.K_RIGHT:
+                print("right pressed")
                 self.speed = 2
-                self.set_animation("walk")
+                self.animation_manager.play_animation("idle_walk_idle")
             if event.key == pygame.K_SPACE:
-                self.set_animation("attack")
+                self.animation_manager.play_animation("attack")
+
+            PRESSED_KEYS.append(event.key)
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
+                print("left released")
                 self.speed = 0
-                self.set_animation("idle")
-            if event.key == pygame.K_RIGHT:
+                if event.key in PRESSED_KEYS and self.animation_manager.active_animation.name == "idle_walk_idle":
+                    self.animation_manager.active_animation.skip()
+            if event.key in PRESSED_KEYS and event.key == pygame.K_RIGHT:
+                print("right released")
                 self.speed = 0
-                self.set_animation("idle")
+                if self.animation_manager.active_animation.name == "idle_walk_idle":
+                    self.animation_manager.active_animation.skip()
+
+            PRESSED_KEYS.remove(event.key)
 
         if event.type == pygame.VIDEORESIZE:
             self.scale(self.director.scale)
@@ -71,9 +85,3 @@ class Player(pygame.sprite.Sprite):
             self.image,
             (int(self.width*window_scale), int(self.height*window_scale))
         )
-
-    def set_animation(self, animation):
-        if animation == self.animation:
-            return
-        self.animation = animation
-        self.animation_object.reset()

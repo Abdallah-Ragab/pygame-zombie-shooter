@@ -17,8 +17,8 @@ class Game(Scene):
 
 
     def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.director.set_scene(Game(self.director))
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+            self.director.set_scene(Pause(self.director))
         self.PlayerGroup.sprite.event(event)
 
     def draw(self, screen, window_scale):
@@ -38,7 +38,7 @@ class Pause(Scene):
         pass
 
     def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
             self.director.set_scene(Game(self.director))
 
     def draw(self, screen, window_scale):
