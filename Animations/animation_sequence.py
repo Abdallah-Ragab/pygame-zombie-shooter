@@ -1,10 +1,13 @@
+from copy import deepcopy as copy
+
+
 class AnimationSequence:
     queue = []
 
     def __init__(self, name, animations=[]):
         self.name = name
         self.animations = animations
-        self.queue = animations.copy()
+        self.queue = copy(self.animations)
 
     def append(self, animation):
         self.queue.append(animation)
@@ -40,5 +43,4 @@ class AnimationSequence:
         yield from self.active_animation.generator()
 
     def reset(self):
-        self.queue = self.animations.copy()
-
+        self.queue = copy(self.animations)
