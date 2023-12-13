@@ -81,6 +81,7 @@ class Animation:
     def generator(self):
         while self.index <= self.end:
             self.index += self.speed
+            self.index = int(self.index)
             yield Frame(dir=self.dir, file=self.files[self.index], name=self.name)
 
     @property
