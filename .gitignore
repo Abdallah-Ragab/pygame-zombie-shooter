@@ -1,0 +1,14 @@
+# Ignore compiled files
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+
+# Ignore dependencies
+/__pycache__/
+/lib/
+/build/
+/dist/
