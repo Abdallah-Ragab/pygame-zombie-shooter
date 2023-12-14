@@ -8,7 +8,7 @@ class Game(Scene):
     def __init__(self, director):
         Scene.__init__(self, director)
         self.PlayerGroup = pygame.sprite.GroupSingle()
-        self.Player = Player(0, 0, 300, 300, (255, 0, 0), 1, self.director)
+        self.Player = Player(0, 0, 300, 300, (255, 0, 0), 2, self.director)
         self.PlayerGroup.add(self.Player)
 
 
