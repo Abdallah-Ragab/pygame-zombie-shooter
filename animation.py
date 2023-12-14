@@ -1,17 +1,18 @@
 import os
 import pygame
+from copy import deepcopy
 
 
 class TransitionRule():
 
-    def __init__(self, from_animation, to_animation, transition_animation, reversible=False):
+    def __init__(self, from_animation, to_animation, intermediate_animation, reversible=False):
         self.from_animation = from_animation
         self.to_animation = to_animation
-        self.transition_animation = transition_animation
+        self.intermediate_animation = intermediate_animation
         self.reversible = reversible
 
     def __repr__(self):
-        return f"<TransitionRule: {self.from_animation} {'<' if self.reversible else ''}-> {self.transition_animation} {'<' if self.reversible else ''}-> {self.to_animation}>"
+        return f"<TransitionRule: {self.from_animation} {'<' if self.reversible else ''}-> {self.intermediate_animation} {'<' if self.reversible else ''}-> {self.to_animation}>"
 
 
 class AnimationSequence():
@@ -43,6 +44,8 @@ class AnimationSequence():
 
         self.FINISHED_FLAG = False
 
+        frame = self.active_animation.get_frame()
+
         if self.active_animation.FINISHED_FLAG:
             if is_last_animation:
                 self.FINISHED_FLAG = True
@@ -52,7 +55,7 @@ class AnimationSequence():
             else:
                 self.animation_index += 1
 
-        return self.active_animation.get_frame()
+        return frame
 
     def reset(self):
         self.animation_index = 0
@@ -71,12 +74,12 @@ class Animation():
     iterations = 0
     FINISHED_FLAG = False
 
-    def __init__(self, name, path, speed=DEFAULT_SPEED, inverse=False, end=9999, start=0):
+    def __init__(self, name, path, speed=DEFAULT_SPEED, reverse=False, end=9999, start=0):
         self.name = name
         self.path = path
         self.speed = float(speed)
-        self.inverse = inverse
-        self.files = self.discover_files()
+        self.reverse = reverse
+        self.discover_files()
         self.end = min(int(end), len(self.files) - 1)
         self.start = int(start)
         self.frame_count = self.end - self.start + 1
@@ -88,14 +91,16 @@ class Animation():
     def discover_files(self):
         files = os.listdir(self.path)
         files.sort()
-        if self.inverse:
+        if self.reverse:
             files.reverse()
-        return files
+        self.files = files
 
     def get_frame(self):
+        index = self.index % self.frame_count
+        frame = Frame(os.path.join(self.path, self.files[index]))
+
         self.index += self.speed
         self.index = int(self.index)
-        index = self.index % self.frame_count
 
         if index >= self.end:
             self.iterations += 1
@@ -103,7 +108,7 @@ class Animation():
         else:
             self.FINISHED_FLAG = False
 
-        return Frame(os.path.join(self.path, self.files[index]))
+        return frame
 
     def reset(self):
         self.index = self.start
@@ -112,6 +117,10 @@ class Animation():
     def hard_reset(self):
         self.reset()
         self.iterations = 0
+
+    def reverse_animation(self):
+        self.reverse = not self.reverse
+        self.discover_files()
 
 
 class AnimationManager():
@@ -143,20 +152,27 @@ class AnimationManager():
     def get_transition(self, from_animation, to_animation):
         for transition in self.transitions:
             if transition.from_animation == from_animation and transition.to_animation == to_animation:
-                return transition
+                return transition, False
             if transition.reversible and transition.from_animation == to_animation and transition.to_animation == from_animation:
-                return transition
-        return None
+                return transition, True
+        return None, False
 
-    def get_transition_animation(self, from_animation, to_animation, transition):
+    def get_transition_animation(self, from_animation, to_animation, transition, reverse=False):
         transition_animation_name = f"transition_{from_animation}_{to_animation}"
         transition_animation = self.get_animation(transition_animation_name)
         if transition_animation:
             return transition_animation
+        if reverse:
+            print(f"Reversing animation {transition.intermediate_animation}")
+            intermediate_animation = deepcopy(self.animations[transition.intermediate_animation])
+            print(dir(intermediate_animation))
+            intermediate_animation.reverse_animation()
+        else:
+            intermediate_animation = self.animations[transition.intermediate_animation]
         transition_animation = AnimationSequence(
             name=transition_animation_name,
             animations=[
-                self.animations[transition.transition_animation],
+                intermediate_animation,
                 self.animations[to_animation],
             ],
             repeat_all=False,)
@@ -172,10 +188,10 @@ class AnimationManager():
         print("from: ", from_animation, "to: ", to_animation)
 
         if not ignore_transition:
-            transition = self.get_transition(from_animation, to_animation)
+            transition, reverse = self.get_transition(from_animation, to_animation)
             print("transition: ", transition)
             if transition:
-                animation = self.get_transition_animation(from_animation, to_animation, transition)
+                animation = self.get_transition_animation(from_animation, to_animation, transition, reverse=reverse)
                 self.add_animation(animation)
                 animation_name = animation.name
             else:
@@ -219,16 +235,16 @@ class AnimationManager():
 # class Animation:
 #     DEFAULT_SPEED = 1
 
-#     def __init__(self, name, dir, speed = DEFAULT_SPEED, end=None, start=None, inverse=False, loop=False):
+#     def __init__(self, name, dir, speed = DEFAULT_SPEED, end=None, start=None, reverse=False, loop=False):
 #         self.name = name
 #         self.dir = dir
 #         self.speed = float(speed)
-#         self.inverse = inverse
+#         self.reverse = reverse
 #         self.loop = loop
 
 #         self.files = os.listdir(self.dir)
 #         self.files.sort()
-#         if self.inverse:
+#         if self.reverse:
 #             self.files.reverse()
 
 #         self.end = int(end) if end else len(self.files) - 1
