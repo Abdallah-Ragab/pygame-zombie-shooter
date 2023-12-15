@@ -30,13 +30,13 @@ class Animation:
         self.files = files
 
     def get_frame(self):
-        index = self.index % self.frame_count
+        index = int(self.index) % self.frame_count
         frame = Frame(os.path.join(self.path, self.files[index]))
 
         self.index += self.speed
-        self.index = int(self.index)
 
-        if index >= self.end:
+
+        if self.index >= self.end:
             self.iterations += 1
             self.FINISHED_FLAG = True
         else:
