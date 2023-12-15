@@ -1,7 +1,7 @@
 import pygame, sys
 from director import Director, Scene
 # from player import Player
-from Character import Player
+from Character import Player, CameraAwareGroupSingle
 from camera import Camera
 
 
@@ -9,20 +9,23 @@ from camera import Camera
 class Game(Scene):
     def __init__(self, director, ):
         Scene.__init__(self, director)
-        self.PlayerGroup = pygame.sprite.GroupSingle()
-        self.Player = Player(scene=self, x=0, y=720-220, height=200, width=200, speed=(1, 1))
-        self.PlayerGroup.add(self.Player)
-        self.background = pygame.image.load("D:\\game assets\\level1.jpg")
-        self.screen_width = self.director.width
-        self.screen_height = self.director.height
-        self.scene_width = self.background.get_width()
-        self.scene_height = self.background.get_height()
-        self.camera = Camera(self.screen_width, self.screen_height, self.scene_width, self.scene_height)
-
+        self.setup()
 
     def update(self):
         self.PlayerGroup.update()
         self.camera.update(self.Player)
+
+    def setup(self):
+        self.screen_width = self.director.width
+        self.screen_height = self.director.height
+        self.background = pygame.image.load("D:\\game assets\\level1.jpg")
+        self.scene_width = self.background.get_width()
+        self.scene_height = self.background.get_height()
+        self.camera = Camera(self.screen_width, self.screen_height, self.scene_width, self.scene_height)
+
+        self.Player = Player(scene=self, x=0, y=400, height=300, width=300, speed=(2, 2))
+        self.PlayerGroup = CameraAwareGroupSingle(self.Player)
+        self.PlayerGroup.set_camera(self.camera)
 
 
 
@@ -33,11 +36,7 @@ class Game(Scene):
 
     def draw(self, screen, window_scale):
         screen.blit(self.background, self.camera.apply(self.background))
-
-        # self.camera.apply(self.PlayerGroup.sprite)
-        # self.PlayerGroup.sprite.rect = self.camera.apply(self.PlayerGroup.sprite)
-
-        self.PlayerGroup.draw(screen, window_scale)
+        self.PlayerGroup.draw(screen)
 
 class Pause(Scene):
     def __init__(self, director):
