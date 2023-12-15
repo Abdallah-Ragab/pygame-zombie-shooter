@@ -3,13 +3,14 @@ import pygame
 
 class Character(pygame.sprite.Sprite):
     moving = False
-    def __init__(self, scene, x, y, height=None, width=None, speed: tuple = (1, 1), *args, **kwargs):
+    def __init__(self, scene, x, y, height=None, width=None, speed: tuple = (1, 1), direction: int = 1, *args, **kwargs):
         super().__init__()
 
         self.scene = scene
         self.speed = speed
         self.height = height
         self.width = width
+        self.direction = direction
 
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -25,8 +26,10 @@ class Character(pygame.sprite.Sprite):
         if not self.width: self.width = frame.image.get_width()
         if not self.height: self.height = frame.image.get_height()
 
+        if self.direction == -1:
+            return pygame.transform.flip(frame.image, True, False)
+
         return pygame.transform.scale(frame.image, (self.width, self.height))
-    # TODO: TRY UPDATING self.rect WITH IMAGE UPDATE TO FIX CAMERA
 
     def update(self):
         self.apply_movement()
