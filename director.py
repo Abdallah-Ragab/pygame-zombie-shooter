@@ -10,15 +10,14 @@ class Director:
         self.aspect_ratio = Fraction(self.screen.get_width(), self.screen.get_height())
         self.scale = 1
 
-        print(self.aspect_ratio)
-
-        self.title = "Game Name"
+        self.title = "Zombie Shooter - Team 7"
         self.scene = None
         self.quit_flag = False
         self.clock = pygame.time.Clock()
 
     def setup(self):
         pygame.display.set_caption(self.title)
+
 
 
     def loop(self):
@@ -79,3 +78,6 @@ class Scene:
 
     def draw(self, screen, scale):
         raise NotImplementedError("draw abstract method must be defined in subclass.")
+
+    def setup(self):
+        raise NotImplementedError("setup abstract method must be defined in subclass.")
