@@ -18,6 +18,7 @@ class AnimationController:
 
     def update(self):
         self.active_animation_finished = self.active_animation.FINISHED_FLAG
+        print(f"finsihed: {self.active_animation_finished}, loop: {self.loop}")
         if self.active_animation_finished and not self.loop:
             self.active_animation = self.animation_dict[self.default]
         return self.active_animation.get_frame()
@@ -80,7 +81,7 @@ class AnimationController:
         )
         return transition_animation
 
-    def switch_animation(self, name, once=False, ignore_transition=False, force=False, loop=True):
+    def switch_animation(self, name, ignore_transition=False, force=False, loop=True):
         if not name in self.animation_dict:
             raise KeyError(f"Animation {name} not found")
 
