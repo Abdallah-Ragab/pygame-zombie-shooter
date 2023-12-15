@@ -15,6 +15,9 @@ class Character(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+        self.x_speed = 0
+        self.y_speed = 0
+
     @property
     def image(self):
         frame = self.animation.update()
@@ -30,8 +33,8 @@ class Character(pygame.sprite.Sprite):
 
     def apply_movement(self):
         if self.moving:
-            self.rect.x += self.speed[0]
-            self.rect.y += self.speed[1]
+            self.rect.x += self.x_speed
+            self.rect.y += self.y_speed
 
     def event(self, event):
         pass
