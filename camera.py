@@ -10,10 +10,12 @@ class Camera:
         self.scene_height = scene_height
 
     def apply(self, entity):
-        if not hasattr(entity, "rect"):
-            rect = entity.get_rect()
-        else:
+        if isinstance(entity, pygame.Rect):
+            rect = entity
+        elif hasattr(entity, "rect"):
             rect = entity.rect
+        else:
+            rect = entity.get_rect()
         return rect.move(self.camera.topleft)
 
     def update(self, target):
