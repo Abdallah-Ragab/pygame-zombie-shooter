@@ -3,6 +3,7 @@ from director import Director, Scene
 
 from Character import Player, CameraAwareGroupSingle
 from camera import Camera
+from cursor import Cursor
 
 
 class Game(Scene):
@@ -16,6 +17,8 @@ class Game(Scene):
     def update(self):
         self.PlayerGroup.update()
         self.camera.update(self.Player)
+        self.cursor.update()
+
 
     def setup(self):
         self.screen_width = self.director.width
@@ -33,6 +36,8 @@ class Game(Scene):
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
 
+        self.cursor = Cursor(self.Player)
+
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
             self.director.set_scene(Pause(self.director))
@@ -41,6 +46,7 @@ class Game(Scene):
     def draw(self, screen, window_scale):
         screen.blit(self.background, self.camera.apply(self.background))
         self.PlayerGroup.draw(screen)
+        self.cursor.draw(screen)
 
 
 class Pause(Scene):
