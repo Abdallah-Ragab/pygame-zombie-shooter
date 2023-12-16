@@ -10,16 +10,21 @@ class Cursor:
         self.rect = self.image.get_rect()
         self.rect.center = pygame.mouse.get_pos()
 
+
         self.min_distance = min_distance
         self.max_distance = max_distance
         self.max_angle = max_angle
         self.x_player_offset = 0
         self.y_player_offset = -100
 
-    @property
-    def player_pos(self):
+        self.player_pos = self.claculate_player_pos()
+
+    # @property
+    def claculate_player_pos(self):
         camera = self.player.scene.camera
         player_rect = camera.apply(self.player.rect)
+
+        print(f"player.x: {player_rect.centerx}, player.y: {player_rect.centery}")
         return (
             player_rect.centerx + self.x_player_offset,
             player_rect.centery + self.y_player_offset,
@@ -93,4 +98,5 @@ class Cursor:
         screen.blit(self.image, self.rect)
 
     def update(self):
-        pass
+        self.player_pos = self.claculate_player_pos()
+
