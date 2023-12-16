@@ -36,7 +36,7 @@ class Game(Scene):
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
 
-        self.cursor = Cursor(self.Player)
+        self.cursor = Cursor(self.Player, min_distance=self.Player.width//2, max_angle=30, DEBUG=False)
 
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
