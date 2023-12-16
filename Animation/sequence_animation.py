@@ -11,7 +11,7 @@ class SequenceAnimation:
         self.repeat = repeat_all
 
     def __repr__(self):
-        return f"<SequenceAnimation: {' - '.join(self.animations)}>"
+        return f"<SequenceAnimation: {' - '.join([str(animation) for animation in self.animations])}>"
 
     def validate(self):
         if not isinstance(self.animations, list):
