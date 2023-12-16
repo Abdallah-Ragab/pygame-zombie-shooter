@@ -90,7 +90,6 @@ class Cursor:
     def draw(self, screen):
         self.calculate_position(screen)
         screen.blit(self.image, self.rect)
-        screen.blit(self.image, self.player_pos)
 
     def update(self):
         pass
