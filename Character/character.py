@@ -28,6 +28,11 @@ class Character(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+        if not self.width:
+            self.width = frame.image.get_width()
+        if not self.height:
+            self.height = frame.image.get_height()
+
         self.x_speed = 0
         self.y_speed = 0
 
@@ -35,10 +40,7 @@ class Character(pygame.sprite.Sprite):
     def image(self):
         frame = self.animation.update()
         print("frame: ", frame)
-        if not self.width:
-            self.width = frame.image.get_width()
-        if not self.height:
-            self.height = frame.image.get_height()
+
 
         if self.direction == -1:
             return pygame.transform.flip(frame.image, True, False)
