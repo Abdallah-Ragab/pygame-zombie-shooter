@@ -43,7 +43,7 @@ class Cursor:
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         dx = abs(mouse_x - self.player_pos[0])
-        dy = abs(mouse_y - self.player_pos[1])
+        dy = (mouse_y - self.player_pos[1])
 
         distance, angle = self.convert_point(dx, dy)
 
