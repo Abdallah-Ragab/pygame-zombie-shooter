@@ -58,6 +58,10 @@ class Player(Character):
                     self.y_speed = self.speed[1]
             if event.key == pygame.K_SPACE:
                 self.animation.switch_animation("fire", loop=False)
+
+                # TODO if animation is fire and moving is true, switch to walk_fire
+
+
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
                 self.animation.switch_animation("idle")
