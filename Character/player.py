@@ -16,7 +16,7 @@ class Player(Character):
                     name="turn_walk",
                     animations=[
                         Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
-                        Animation("walk", "D:\\game assets\\swat 1\\walk")
+                        Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5)
                     ]
                 ),
                 Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
@@ -28,6 +28,15 @@ class Player(Character):
         )
 
     def update(self):
+        active_animation = self.animation.active_animation
+
+        print(f'animation manager: {self.animation}, active_animation: {active_animation}')
+        if isinstance(active_animation, SequenceAnimation):
+            active_animation = active_animation.active_animation
+
+        if active_animation is not None and active_animation.name == "turn":
+            if active_animation.FINISHED_FLAG:
+                self.direction *= -1
         return super().update()
 
     def event(self, event):
@@ -35,10 +44,16 @@ class Player(Character):
             if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
                 self.moving = True
                 if event.key == pygame.K_RIGHT:
-                    self.animation.switch_animation("walk")
+                    if self.direction == -1:
+                        self.animation.switch_animation("turn_walk")
+                    else:
+                        self.animation.switch_animation("walk")
                     self.x_speed = self.speed[0]
                 elif event.key == pygame.K_LEFT:
-                    self.animation.switch_animation("turn_walk")
+                    if self.direction == 1:
+                        self.animation.switch_animation("turn_walk")
+                    else:
+                        self.animation.switch_animation("walk")
                     self.x_speed = -self.speed[0]
                 if event.key == pygame.K_UP:
                     self.animation.switch_animation("walk")
