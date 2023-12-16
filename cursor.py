@@ -5,8 +5,7 @@ import pygame
 class Cursor:
     def __init__(self, player, min_distance=100, max_distance=700, max_angle=45):
         self.player = player
-        self.image = pygame.Surface((15, 15))
-        self.image.fill((255, 0, 0))
+        self.image = pygame.image.load("assets/cursor.png")
         self.rect = self.image.get_rect()
         self.rect.center = pygame.mouse.get_pos()
 
