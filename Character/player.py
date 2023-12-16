@@ -2,35 +2,30 @@ import pygame
 from .character import Character
 from Animation import AnimationController, Animation, SequenceAnimation, TransitionRule
 
-def reverse_direction(self):
-    print(f'reverse: {self.direction}>{self.direction*-1}')
-    self.direction *= -1
 
 class Player(Character):
     animation = AnimationController(
-            animations=[
-                Animation('idle', "D:\\game assets\\swat 1\\idle", speed=1.5),
-                Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
-                Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
-                SequenceAnimation(
-                    name="turn_walk",
-                    animations=[
-                        Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
-                        Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5)
-                    ]
-                ),
-                Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
-            ],
-            default="idle",
-            # transitions=[
-            #     TransitionRule("idle", "walk", "idle_to_walk", True),
-            # ]
-        )
+        animations=[
+            Animation("idle", "D:\\game assets\\swat 1\\idle", speed=1.5),
+            Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
+            Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
+            SequenceAnimation(
+                name="turn_walk",
+                animations=[
+                    Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
+                    Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
+                ],
+            ),
+            Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
+        ],
+        default="idle",
+        # transitions=[
+        #     TransitionRule("idle", "walk", "idle_to_walk", True),
+        # ]
+    )
 
     def update(self):
         active_animation = self.animation.active_animation
-
-        print(f'animation manager: {self.animation}, active_animation: {active_animation}')
         if isinstance(active_animation, SequenceAnimation):
             active_animation = active_animation.active_animation
 
@@ -70,6 +65,3 @@ class Player(Character):
                 self.x_speed, self.y_speed = 0, 0
 
         return super().event(event)
-
-
-

@@ -14,6 +14,7 @@ class CameraAwareGroup(pygame.sprite.Group):
             self.spritedict[spr] = surface.blit(spr.image, self.camera.apply(spr))
         self.lostsprites = []
 
+
 class CameraAwareGroupSingle(pygame.sprite.GroupSingle):
     def __init__(self, *sprites):
         super().__init__(*sprites)

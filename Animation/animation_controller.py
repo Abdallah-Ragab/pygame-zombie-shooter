@@ -18,7 +18,7 @@ class AnimationController:
 
     def update(self):
         self.active_animation_finished = self.active_animation.FINISHED_FLAG
-        print(f"finsihed: {self.active_animation_finished}, loop: {self.loop}")
+        # print(f"finsihed: {self.active_animation_finished}, loop: {self.loop}")
         if self.active_animation_finished and not self.loop:
             self.active_animation = self.animation_dict[self.default]
         return self.active_animation.get_frame()
@@ -65,7 +65,6 @@ class AnimationController:
             intermediate_animation = deepcopy(
                 self.animation_dict[transition.intermediate_animation]
             )
-            print(dir(intermediate_animation))
             intermediate_animation.reverse_animation()
         else:
             intermediate_animation = self.animation_dict[

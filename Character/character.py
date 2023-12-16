@@ -3,7 +3,19 @@ import pygame
 
 class Character(pygame.sprite.Sprite):
     moving = False
-    def __init__(self, scene, x, y, height=None, width=None, speed: tuple = (1, 1), direction: int = 1, *args, **kwargs):
+
+    def __init__(
+        self,
+        scene,
+        x,
+        y,
+        height=None,
+        width=None,
+        speed: tuple = (1, 1),
+        direction: int = 1,
+        *args,
+        **kwargs
+    ):
         super().__init__()
 
         self.scene = scene
@@ -22,9 +34,11 @@ class Character(pygame.sprite.Sprite):
     @property
     def image(self):
         frame = self.animation.update()
-        print('frame: ', frame)
-        if not self.width: self.width = frame.image.get_width()
-        if not self.height: self.height = frame.image.get_height()
+        print("frame: ", frame)
+        if not self.width:
+            self.width = frame.image.get_width()
+        if not self.height:
+            self.height = frame.image.get_height()
 
         if self.direction == -1:
             return pygame.transform.flip(frame.image, True, False)

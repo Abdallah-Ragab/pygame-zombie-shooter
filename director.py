@@ -2,11 +2,14 @@ import pygame
 import sys
 from fractions import Fraction
 
+
 class Director:
     def __init__(self):
         self.width = 1280
         self.height = 720
-        self.screen = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(
+            (self.width, self.height), pygame.RESIZABLE
+        )
         self.aspect_ratio = Fraction(self.screen.get_width(), self.screen.get_height())
         self.scale = 1
 
@@ -17,8 +20,6 @@ class Director:
 
     def setup(self):
         pygame.display.set_caption(self.title)
-
-
 
     def loop(self):
         while not self.quit_flag:
@@ -40,10 +41,12 @@ class Director:
         self.scene = scene
 
     def aspect_ratio_resize(self, event_width, event_height):
-        delta_width = (event_width - self.screen.get_width())/self.aspect_ratio.numerator
-        delta_height = (event_height - self.screen.get_height())/self.aspect_ratio.denominator
-
-        print(delta_width, delta_height)
+        delta_width = (
+            event_width - self.screen.get_width()
+        ) / self.aspect_ratio.numerator
+        delta_height = (
+            event_height - self.screen.get_height()
+        ) / self.aspect_ratio.denominator
 
         width_factor = event_width / self.width
         height_factor = event_height / self.height
@@ -55,6 +58,7 @@ class Director:
     def quit(self):
         self.quit_flag = True
 
+
 class Scene:
     def __init__(self, director):
         self.director = director
@@ -62,11 +66,17 @@ class Scene:
     def scale(self):
         scale = self.director.scale
         for surface in self.surfaces:
-            surface = pygame.transform.scale(surface, (int(surface.get_width()*scale), int(surface.get_height()*scale)))
+            surface = pygame.transform.scale(
+                surface,
+                (int(surface.get_width() * scale), int(surface.get_height() * scale)),
+            )
         for rect in self.rects:
-            rect = pygame.Rect((rect.x*scale, rect.y*scale), (rect.width*scale, rect.height*scale))
+            rect = pygame.Rect(
+                (rect.x * scale, rect.y * scale),
+                (rect.width * scale, rect.height * scale),
+            )
         for font in self.fonts:
-            font = pygame.font.Font(font.font, int(font.size*scale))
+            font = pygame.font.Font(font.font, int(font.size * scale))
         for text in self.texts:
             text = font.render(text.text, True, text.color)
 

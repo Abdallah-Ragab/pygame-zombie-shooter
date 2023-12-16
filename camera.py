@@ -20,11 +20,5 @@ class Camera:
         shooting_x_pos = self.width // 3
         target_x_offset = shooting_x_pos - target.rect.centerx
         reaction_x = min(0, target_x_offset)
-
-
         reaction_x = max(-(self.scene_width - self.width), reaction_x)  # right
-        # x = max(min(0, self.width // 3 - target.rect.x), x)  # right
-        y = 0
-
-        print(f"error: {reaction_x}, {self.camera.x}")
         self.camera.x = reaction_x
