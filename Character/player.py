@@ -11,6 +11,8 @@ class Player(Character):
             Animation("idle", "D:\\game assets\\swat 1\\idle", speed=1.5),
             Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
             Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
+            Animation("idle_to_walk", "D:\\game assets\\swat 1\\idle to walk", speed=1.5),
+            Animation("idle_to_fire", "D:\\game assets\\swat 1\\idle to fire", speed=1.5),
             SequenceAnimation(
                 name="turn_walk",
                 animations=[
@@ -21,9 +23,10 @@ class Player(Character):
             Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
         ],
         default="idle",
-        # transitions=[
-        #     TransitionRule("idle", "walk", "idle_to_walk", True),
-        # ]
+        transitions=[
+            TransitionRule("idle", "walk", "idle_to_walk", True),
+            # TransitionRule("idle", "fire", "idle_to_fire", True),
+        ]
     )
 
     def update(self):
