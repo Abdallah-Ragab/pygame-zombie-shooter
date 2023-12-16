@@ -73,7 +73,8 @@ class Player(Character):
                 self.moving = False
                 self.x_speed, self.y_speed = 0, 0
 
-            if event.key == pygame.K_SPACE:
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
                 self.animation.switch_animation("idle")
                 if self.moving:
                     self.animation.switch_animation("walk")
