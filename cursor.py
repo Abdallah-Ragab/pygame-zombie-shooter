@@ -20,7 +20,10 @@ class Cursor:
     def player_pos(self):
         camera = self.player.scene.camera
         player_rect = camera.apply(self.player.rect)
-        return player_rect.centerx + self.x_player_offset, player_rect.centery + self.y_player_offset
+        return (
+            player_rect.centerx + self.x_player_offset,
+            player_rect.centery + self.y_player_offset,
+        )
 
     def calculate_point(self, distance, angle):
         x = distance * math.cos(math.radians(angle))
@@ -34,32 +37,29 @@ class Cursor:
 
     def point_from_player(self, distance, angle):
         x, y = self.calculate_point(distance, angle)
-        return x*self.player.direction + self.player_pos[0], y + self.player_pos[1]
+        return x * self.player.direction + self.player_pos[0], y + self.player_pos[1]
 
     def calculate_position(self, screen):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        dx = mouse_x - self.player_pos[0]
-        dy = mouse_y - self.player_pos[1]
+        dx = abs(mouse_x - self.player_pos[0])
+        dy = abs(mouse_y - self.player_pos[1])
 
         distance, angle = self.convert_point(dx, dy)
 
         angle_abs = abs(angle)
         angle_sign = 1 if angle > 0 else -1
 
-        max_angle = abs(self.max_angle/2)
-        max_distance = min(self.max_distance, screen.get_rect().width - self.player_pos[0] - self.min_distance)
+        max_angle = abs(self.max_angle / 2)
+        max_distance = min(
+            self.max_distance,
+            screen.get_rect().width - self.player_pos[0] - self.min_distance,
+        )
         min_distance = self.min_distance
-
-        distance_condition = min_distance < distance < max_distance
-        angle_condition = angle_abs < max_angle
 
         distance = max(min_distance, distance)
         distance = min(max_distance, distance)
         _angle = min(max_angle, angle_abs) * angle_sign
-
-        print(f"actual angle: {angle}, chosen angle: {_angle}")
-        print(f"distance: {min_distance} < {distance} < {max_distance} {distance_condition}, angle: {angle} < {max_angle} {angle_condition}")
 
         x, y = self.point_from_player(distance, _angle)
 
@@ -69,9 +69,24 @@ class Cursor:
         pygame.draw.circle(screen, (255, 0, 0), self.player_pos, self.min_distance, 1)
         pygame.draw.circle(screen, (255, 0, 0), self.player_pos, self.max_distance, 1)
 
-        pygame.draw.line(screen, (255, 255, 0), self.player_pos, self.point_from_player(self.max_distance, abs(self.max_angle/2)))
-        pygame.draw.line(screen, (0, 255, 0), self.player_pos, self.point_from_player(self.max_distance, 0))
-        pygame.draw.line(screen, (255, 255, 0), self.player_pos, self.point_from_player(self.max_distance, -abs(self.max_angle/2)))
+        pygame.draw.line(
+            screen,
+            (255, 255, 0),
+            self.player_pos,
+            self.point_from_player(self.max_distance, abs(self.max_angle / 2)),
+        )
+        pygame.draw.line(
+            screen,
+            (0, 255, 0),
+            self.player_pos,
+            self.point_from_player(self.max_distance, 0),
+        )
+        pygame.draw.line(
+            screen,
+            (255, 255, 0),
+            self.player_pos,
+            self.point_from_player(self.max_distance, -abs(self.max_angle / 2)),
+        )
 
     def draw(self, screen):
         self.calculate_position(screen)
