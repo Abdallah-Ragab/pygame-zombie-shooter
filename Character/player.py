@@ -61,7 +61,8 @@ class Player(Character):
                 elif event.key == pygame.K_DOWN:
                     self.animation.switch_animation("walk")
                     self.y_speed = self.speed[1]
-            if event.key == pygame.K_SPACE:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
                 self.animation.switch_animation("fire", loop=False)
                 if self.moving:
                     self.animation.switch_animation("walk_fire", loop=False)
