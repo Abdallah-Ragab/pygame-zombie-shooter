@@ -52,14 +52,19 @@ class Cursor:
 
         distance, angle = self.convert_point(dx, dy)
 
+        print(f"distance: {distance}, angle: {angle}")
+
         angle_abs = abs(angle)
         angle_sign = 1 if angle > 0 else -1
 
         max_angle = abs(self.max_angle / 2)
         max_distance = min(
             self.max_distance,
-            screen.get_rect().width - self.player_pos[0] - self.min_distance,
+            screen.get_rect().width - self.player_pos[0],
         )
+        if self.player.direction == -1:
+            max_distance = min(self.max_distance, self.player_pos[0])
+
         min_distance = self.min_distance
 
         distance = max(min_distance, distance)
