@@ -4,8 +4,10 @@ from Animation import AnimationController, Animation, SequenceAnimation, Transit
 
 
 class Player(Character):
+    # TODO ADD ACTUAL WALK_FIRE ANIMATION
     animation = AnimationController(
         animations=[
+            Animation("walk_fire", "D:\\game assets\\zombie\\idle", speed=1.5),
             Animation("idle", "D:\\game assets\\swat 1\\idle", speed=1.5),
             Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
             Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
@@ -58,14 +60,18 @@ class Player(Character):
                     self.y_speed = self.speed[1]
             if event.key == pygame.K_SPACE:
                 self.animation.switch_animation("fire", loop=False)
-
-                # TODO if animation is fire and moving is true, switch to walk_fire
-
+                if self.moving:
+                    self.animation.switch_animation("walk_fire", loop=False)
 
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
                 self.animation.switch_animation("idle")
                 self.moving = False
                 self.x_speed, self.y_speed = 0, 0
+
+            if event.key == pygame.K_SPACE:
+                self.animation.switch_animation("idle")
+                if self.moving:
+                    self.animation.switch_animation("walk")
 
         return super().event(event)
