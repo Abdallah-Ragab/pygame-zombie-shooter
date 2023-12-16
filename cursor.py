@@ -3,12 +3,14 @@ import pygame
 
 
 class Cursor:
-    def __init__(self, player, min_distance=100, max_distance=700, max_angle=45):
+    def __init__(self, player, min_distance=150, max_distance=700, max_angle=45, DEBUG=False):
         self.player = player
         self.image = pygame.image.load("assets/cursor.png")
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.image.get_rect()
         self.rect.center = pygame.mouse.get_pos()
+
+        self.DEBUG = DEBUG
 
 
         self.min_distance = min_distance
@@ -45,10 +47,21 @@ class Cursor:
         return x * self.player.direction + self.player_pos[0], y + self.player_pos[1]
 
     def calculate_position(self, screen):
+        if self.DEBUG:
+            self.draw_debug(screen)
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        dx = abs(mouse_x - self.player_pos[0])
+        if self.player.direction == -1 and mouse_x > self.player_pos[0]:
+            return
+        elif self.player.direction == 1 and mouse_x < self.player_pos[0]:
+            return
+
+        dx = (mouse_x - self.player_pos[0])
         dy = (mouse_y - self.player_pos[1])
+
+        if self.player.direction == -1:
+            dx *= -1
 
         distance, angle = self.convert_point(dx, dy)
 
@@ -75,6 +88,7 @@ class Cursor:
 
         self.rect.center = (x, y)
 
+    def draw_debug(self, screen):
         # draw boundaries for debugging
         pygame.draw.circle(screen, (255, 0, 0), self.player_pos, self.min_distance, 1)
         pygame.draw.circle(screen, (255, 0, 0), self.player_pos, self.max_distance, 1)
