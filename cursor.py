@@ -18,7 +18,9 @@ class Cursor:
 
     @property
     def player_pos(self):
-        return self.player.rect.centerx + self.x_player_offset, self.player.rect.centery + self.y_player_offset
+        camera = self.player.scene.camera
+        player_rect = camera.apply(self.player.rect)
+        return player_rect.centerx + self.x_player_offset, player_rect.centery + self.y_player_offset
 
     def calculate_point(self, distance, angle):
         x = distance * math.cos(math.radians(angle))
@@ -32,7 +34,7 @@ class Cursor:
 
     def point_from_player(self, distance, angle):
         x, y = self.calculate_point(distance, angle)
-        return x + self.player_pos[0], y + self.player_pos[1]
+        return x*self.player.direction + self.player_pos[0], y + self.player_pos[1]
 
     def calculate_position(self, screen):
         mouse_x, mouse_y = pygame.mouse.get_pos()
