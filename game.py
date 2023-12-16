@@ -28,7 +28,7 @@ class Game(Scene):
         )
 
         self.Player = Player(
-            scene=self, x=0, y=400, height=300, width=300, speed=(2, 2)
+            scene=self, x=0, y=400, height=300, width=300, speed=(3, 3)
         )
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
