@@ -2,6 +2,9 @@ import pygame
 from .character import Character
 from Animation import AnimationController, Animation, SequenceAnimation, TransitionRule
 
+def reverse_direction(self):
+    print(f'reverse: {self.direction}>{self.direction*-1}')
+    self.direction *= -1
 
 class Player(Character):
     animation = AnimationController(
@@ -12,7 +15,7 @@ class Player(Character):
                 SequenceAnimation(
                     name="turn_walk",
                     animations=[
-                        Animation("turn", "D:\\game assets\\swat 1\\turn"),
+                        Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
                         Animation("walk", "D:\\game assets\\swat 1\\walk")
                     ]
                 ),
