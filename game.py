@@ -23,7 +23,7 @@ class Game(Scene):
     def setup(self):
         self.screen_width = self.director.width
         self.screen_height = self.director.height
-        self.background = pygame.image.load("D:\\game assets\\level1.jpg")
+        self.background = pygame.image.load("assets/levels/city.jpg")
         self.scene_width = self.background.get_width()
         self.scene_height = self.background.get_height()
         self.camera = Camera(
@@ -31,7 +31,7 @@ class Game(Scene):
         )
 
         self.Player = Player(
-            scene=self, x=0, y=400, height=300, width=300, speed=(3, 3)
+            scene=self, x=0, y=400, height=250, width=250, speed=(3, 3)
         )
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
