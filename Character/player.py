@@ -70,6 +70,7 @@ class Player(Character):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 self.animation.switch_animation("fire", loop=False)
+                self.health -= 1
                 if self.moving:
                     self.animation.switch_animation("walk_fire", loop=False)
 
