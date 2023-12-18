@@ -79,7 +79,6 @@ class HUDElement:
         return screen.get_width() - distance - width
 
 
-
 class Avatar(HUDElement):
     def __init__(self, player):
         super().__init__()
@@ -97,8 +96,6 @@ class Avatar(HUDElement):
     def draw(self, screen):
         self.x = self.x_from_right(screen, self.right, self.width)
         screen.blit(self.image, (self.x, self.y))
-
-
 
 
 class HealthBar(HUDElement):
@@ -141,14 +138,20 @@ class Ammo(HUDElement):
         self.x = None
         self.y = 140
         self.right = 50
+        self.ammo = 10
 
     def update(self):
+        # update ammo
         pass
 
     def draw(self, screen):
         self.x = self.x_from_right(screen, self.right, self.width)
         screen.blit(self.image, (self.x, self.y))
-
+        font = pygame.font.Font(None, 24)
+        text = font.render(str(self.ammo), True, (255, 255, 255))
+        text_x = self.x + (self.width / 2) - (text.get_width() / 2)
+        text_y = self.y + (self.height / 2) - (text.get_height() / 2) +5
+        screen.blit(text, (text_x, text_y))
 
 
 class Money(HUDElement):
@@ -160,6 +163,7 @@ class Money(HUDElement):
         self.x = None
         self.y = 200
         self.right = 50
+        self.money = 100  # Constant money text
 
     def update(self):
         pass
@@ -167,3 +171,9 @@ class Money(HUDElement):
     def draw(self, screen):
         self.x = self.x_from_right(screen, self.right, self.width)
         screen.blit(self.image, (self.x, self.y))
+        font = pygame.font.Font(None, 24)
+        text = font.render(str(self.money), True, (255, 255, 255))
+
+        text_x = self.x + (self.width / 2) - (text.get_width() / 2)
+        text_y = self.y + (self.height / 2) - (text.get_height() / 2)
+        screen.blit(text, (text_x, text_y))
