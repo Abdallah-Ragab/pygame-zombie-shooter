@@ -3,6 +3,7 @@ import pygame
 
 class Character(pygame.sprite.Sprite):
     moving = False
+    health = 100
 
     def __init__(
         self,
