@@ -1,3 +1,4 @@
+import time
 import pygame
 from .character import Character
 from Animation import AnimationController, Animation, SequenceAnimation, TransitionRule
@@ -28,8 +29,14 @@ class Player(Character):
             # TransitionRule("idle", "fire", "idle_to_fire", True),
         ]
     )
+    time = time.time()
 
     def update(self):
+        if int(time.time()) > int(self.time):
+            self.health -= 10
+            self.time = time.time()
+            print(self.health)
+
         active_animation = self.animation.active_animation
         if isinstance(active_animation, SequenceAnimation):
             active_animation = active_animation.active_animation
