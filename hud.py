@@ -31,11 +31,11 @@ class HUD:
             element.draw(screen)
             y += element.height + padding
 
-    def Organize(self, screen, padding_x=5, padding_y=5, start_y = 20, start_right = 50):
+    def Organize(self, screen, padding_x=5, padding_y=5, start_y = 50, start_right = 50):
 
-        elements = filter(lambda element: not isinstance(element, Ammo), self.elements)
+        elements = list(filter(lambda element: not isinstance(element, Ammo), self.elements))
         for element in elements:
-            element.right = start_right
+            element.right = float(start_right)
 
         self.stack(screen, elements, padding_y, start_y)
 
@@ -89,7 +89,7 @@ class Avatar(HUDElement):
         self.height = self.image.get_height()
         self.x = None
         self.y = 20
-        self.right = 20
+        self.right = 50
 
     def update(self):
         pass
@@ -113,7 +113,7 @@ class HealthBar(HUDElement):
         self.x = None
         self.y = 80
 
-        self.right = 20
+        self.right = 50
         self.max_health = self.player.health
 
     @property
@@ -140,7 +140,7 @@ class Ammo(HUDElement):
         self.height = self.image.get_height()
         self.x = None
         self.y = 140
-        self.right = 20
+        self.right = 50
 
     def update(self):
         pass
@@ -159,7 +159,7 @@ class Money(HUDElement):
         self.height = self.image.get_height()
         self.x = None
         self.y = 200
-        self.right = 20
+        self.right = 50
 
     def update(self):
         pass
