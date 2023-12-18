@@ -83,7 +83,8 @@ class Avatar(HUDElement):
     def __init__(self, player):
         super().__init__()
         self.player = player
-        self.image = pygame.image.load(self.assets_dir + "/avatar.png")
+        self.character = 1
+        self.image = pygame.image.load(self.assets_dir + f"/avatars/{self.character}.png")
         self.width = self.image.get_width()
         self.height = self.image.get_height()
         self.x = None
