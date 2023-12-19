@@ -57,10 +57,10 @@ class Video:
     def set_volume(self, volume):
         self.video.set_volume(volume)
 
-    def seek(self, seek_time, accurate=False):
+    def seek(self, seek_time, relative=False, accurate=False, seek_by_bytes=False):
         vid_time = self.video.get_pts()
         if vid_time + seek_time < self.duration and self.active:
-            self.video.seek(seek_time)
+            self.video.seek(seek_time, relative=relative, accurate=accurate, seek_by_bytes=seek_by_bytes)
             if seek_time < 0:
                 while (vid_time + seek_time < self.frames * self.frame_delay):
                     self.frames -= 1
