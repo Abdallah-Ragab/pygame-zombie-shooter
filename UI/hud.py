@@ -20,17 +20,21 @@ class HUD(UIGroup):
         scale=1,
     ):
         super().__init__(
-            elements, background, x, y, right, padding_x, padding_y, space_x, space_y, scale
+            elements,
+            background,
+            x,
+            y,
+            right,
+            padding_x,
+            padding_y,
+            space_x,
+            space_y,
+            scale,
         )
-        print(f"Scaled HUD to {self.scale}")
         self.player = player
 
     def update(self):
         super().update()
-        for element in self.elements:
-            print(f"{element.__class__.__name__}: right:{element.right}")
-
-
 
     def draw(self, screen):
         super().draw(screen)
@@ -56,7 +60,6 @@ class HUD(UIGroup):
         money.set_y(money.y - 10)
 
 
-
 class Avatar(UIElement):
     pass
 
@@ -77,7 +80,16 @@ class HealthBar(UIGroup):
         scale=1,
     ):
         super().__init__(
-            elements, background, x, y, right, padding_x, padding_y, space_x, space_y, scale
+            elements,
+            background,
+            x,
+            y,
+            right,
+            padding_x,
+            padding_y,
+            space_x,
+            space_y,
+            scale,
         )
         self.player = player
 
@@ -88,7 +100,9 @@ class HealthBar(UIGroup):
     def update(self):
         super().update()
         front_bar = self.elements[1]
-        front_bar.width = max(front_bar.width * self.player.health / self.player.max_health, 0)
+        front_bar.width = max(
+            front_bar.width * self.player.health / self.player.max_health, 0
+        )
         front_bar.image = front_bar.image.subsurface(
             0, 0, front_bar.width, front_bar.height
         )
@@ -115,7 +129,7 @@ class Ammo(UIElement):
         super().draw(screen)
         text = self.font.render(str(self.player.bullets), True, (255, 255, 255))
         text_rect = text.get_rect()
-        text_rect.center = (self.x + self.width / 2, self.y + self.height / 2 + 7)
+        text_rect.center = (self.x + self.width * 0.45, self.y + self.height * 0.55)
         screen.blit(text, text_rect)
 
 
@@ -133,7 +147,7 @@ class Money(UIElement):
         scale=1,
     ):
         super().__init__(x, y, image, path, right, width, height, scale)
-        self.font = pygame.font.Font(None, int(28*self.scale))
+        self.font = pygame.font.Font(None, int(28 * self.scale))
         self.player = player
 
     def draw(self, screen):
