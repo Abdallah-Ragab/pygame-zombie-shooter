@@ -34,6 +34,10 @@ class Player(Character):
         ],
     )
     time = time.time()
+    max_bullets = 32
+    bullets = max_bullets
+    max_health = 100
+    health = max_health
 
     def update(self):
         active_animation = self.animation.active_animation
@@ -70,7 +74,7 @@ class Player(Character):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 self.animation.switch_animation("fire", loop=False)
-                self.health -= 1
+                self.bullets -= 1
                 if self.moving:
                     self.animation.switch_animation("walk_fire", loop=False)
 
