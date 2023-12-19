@@ -75,6 +75,7 @@ class Player(Character):
             if event.button == 1:
                 self.animation.switch_animation("fire", loop=False)
                 self.bullets -= 1
+                self.health -= 5
                 if self.moving:
                     self.animation.switch_animation("walk_fire", loop=False)
 

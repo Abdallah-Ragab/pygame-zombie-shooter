@@ -51,9 +51,8 @@ class Game(Scene):
                 Money(self.Player, path="assets/hud/money.png"),
             ],
             right=25,
-            # x=50,
             y=50,
-            scale=0.7,
+            scale=0.6,
             space_y=-5,
             padding_x=10,
         )
