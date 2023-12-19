@@ -39,7 +39,7 @@ class Game(Scene):
         self.hud = HUD(
             self.Player,
             elements=[
-                Avatar(self.Player, path="assets/hud/avatar.png"),
+                Avatar(self.Player, path="assets/hud/avatars/1.png"),
                 HealthBar(
                     self.Player,
                     elements=[
@@ -50,11 +50,14 @@ class Game(Scene):
                 Ammo(self.Player, path="assets/hud/ammo.png"),
                 Money(self.Player, path="assets/hud/money.png"),
             ],
-            right=50,
+            right=25,
+            # x=50,
             y=50,
             scale=0.7,
+            space_y=-5,
+            padding_x=10,
         )
-        # self.hud.stack_vertical()
+        # self.hud.stack_over()
 
     def update(self):
         self.PlayerGroup.update()
