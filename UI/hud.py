@@ -100,8 +100,10 @@ class HealthBar(UIGroup):
     def update(self):
         super().update()
         front_bar = self.elements[1]
+        back_bar = self.elements[0]
+
         front_bar.width = max(
-            front_bar.width * self.player.health / self.player.max_health, 0
+            back_bar.width * self.player.health / self.player.max_health, 0
         )
         front_bar.image = front_bar.image.subsurface(
             0, 0, front_bar.width, front_bar.height
