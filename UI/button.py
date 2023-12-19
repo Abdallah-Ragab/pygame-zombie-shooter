@@ -3,8 +3,8 @@ from .ui_element import UIElement
 
 
 class Button(UIElement):
-    def __init__(self, x=0, y=0, image=None, path=None, right=None, width=None, height=None, callback=None):
-        super().__init__(x, y, image, path, right, width, height)
+    def __init__(self, x=0, y=0, image=None, path=None, right=None, width=None, height=None, scale=1, callback=None):
+        super().__init__(x, y, image, path, right, width, height, scale)
         self.callback = callback
 
     @property
