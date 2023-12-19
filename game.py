@@ -20,7 +20,7 @@ class Game(Scene):
     def setup(self):
         self.screen_width = self.director.width
         self.screen_height = self.director.height
-        self.background = pygame.image.load("assets/levels/forest.jpg")
+        self.background = pygame.image.load("assets/levels/forest.png")
         self.scene_width = self.background.get_width()
         self.scene_height = self.background.get_height()
         self.camera = Camera(
@@ -52,8 +52,9 @@ class Game(Scene):
             ],
             right=50,
             y=50,
+            scale=0.7,
         )
-        self.hud.stack_vertical()
+        # self.hud.stack_vertical()
 
     def update(self):
         self.PlayerGroup.update()
