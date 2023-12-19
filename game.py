@@ -4,7 +4,9 @@ from director import Director, Scene
 from Character import Player, CameraAwareGroupSingle
 from camera import Camera
 from cursor import Cursor
-from hud import HUD
+
+# from hud import HUD
+from UI import HUD, Avatar, HealthBar, Ammo, Money, UIElement
 
 
 class Game(Scene):
@@ -14,13 +16,6 @@ class Game(Scene):
     ):
         Scene.__init__(self, director)
         self.setup()
-
-    def update(self):
-        self.PlayerGroup.update()
-        self.camera.update(self.Player)
-        self.cursor.update()
-        self.hud.update()
-
 
     def setup(self):
         self.screen_width = self.director.width
@@ -38,19 +33,44 @@ class Game(Scene):
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
 
-        self.cursor = Cursor(self.Player, min_distance=self.Player.width//2, max_angle=30, DEBUG=False)
-        self.hud = HUD(self.Player)
+        self.cursor = Cursor(
+            self.Player, min_distance=self.Player.width // 2, max_angle=30, DEBUG=False
+        )
+        self.hud = HUD(
+            self.Player,
+            elements=[
+                Avatar(self.Player, path="assets/hud/avatar.png"),
+                HealthBar(
+                    self.Player,
+                    elements=[
+                        UIElement(path="assets/hud/health_bar_back.png"),
+                        UIElement(path="assets/hud/health_bar_front.png"),
+                    ],
+                ),
+                Ammo(self.Player, path="assets/hud/ammo.png"),
+                Money(self.Player, path="assets/hud/money.png"),
+            ],
+            right=50,
+            y=50,
+        )
+        self.hud.stack_vertical()
+
+    def update(self):
+        self.PlayerGroup.update()
+        self.camera.update(self.Player)
+        self.cursor.update()
+        self.hud.update()
+
+    def draw(self, screen, window_scale):
+        screen.blit(self.background, self.camera.apply(self.background))
+        self.PlayerGroup.draw(screen)
+        self.hud.draw(screen)
+        self.cursor.draw(screen)
 
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
             self.director.set_scene(Pause(self.director))
         self.PlayerGroup.sprite.event(event)
-
-    def draw(self, screen, window_scale):
-        screen.blit(self.background, self.camera.apply(self.background))
-        self.hud.draw(screen)
-        self.PlayerGroup.draw(screen)
-        self.cursor.draw(screen)
 
 
 class Pause(Scene):
