@@ -74,9 +74,10 @@ class HealthBar(UIGroup):
         padding_y=0,
         space_x=0,
         space_y=0,
+        scale=1,
     ):
         super().__init__(
-            elements, background, x, y, right, padding_x, padding_y, space_x, space_y
+            elements, background, x, y, right, padding_x, padding_y, space_x, space_y, scale
         )
         self.player = player
 
@@ -86,8 +87,10 @@ class HealthBar(UIGroup):
 
     def update(self):
         super().update()
-        self.elements[1].width = (
-            self.elements[0].width * self.player.health / self.player.max_health
+        front_bar = self.elements[1]
+        front_bar.width = max(front_bar.width * self.player.health / self.player.max_health, 0)
+        front_bar.image = front_bar.image.subsurface(
+            0, 0, front_bar.width, front_bar.height
         )
 
 
@@ -102,8 +105,9 @@ class Ammo(UIElement):
         right=None,
         width=None,
         height=None,
+        scale=1,
     ):
-        super().__init__(x, y, image, path, right, width, height)
+        super().__init__(x, y, image, path, right, width, height, scale)
         self.font = pygame.font.Font(None, 28)
         self.player = player
 
@@ -126,14 +130,15 @@ class Money(UIElement):
         right=None,
         width=None,
         height=None,
+        scale=1,
     ):
-        super().__init__(x, y, image, path, right, width, height)
-        self.font = pygame.font.Font(None, 28)
+        super().__init__(x, y, image, path, right, width, height, scale)
+        self.font = pygame.font.Font(None, int(28*self.scale))
         self.player = player
 
     def draw(self, screen):
         super().draw(screen)
-        text = self.font.render(str(1350), True, (255, 255, 255))
+        text = self.font.render(str(1050), True, (255, 255, 255))
         text_rect = text.get_rect()
-        text_rect.center = (self.x + self.width / 2 - 5, self.y + self.height / 2 - 5)
+        text_rect.center = (self.x + self.width * 0.45, self.y + self.height * 0.52)
         screen.blit(text, text_rect)
