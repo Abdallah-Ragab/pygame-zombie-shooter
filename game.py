@@ -1,4 +1,6 @@
 import pygame, sys
+# from pygamevideo import Video
+from Video.player import Video
 from director import Director, Scene
 
 from Character import Player, CameraAwareGroupSingle
@@ -15,7 +17,6 @@ class Game(Scene):
         director,
     ):
         Scene.__init__(self, director)
-        self.setup()
 
     def setup(self):
         self.screen_width = self.director.width
@@ -111,10 +112,51 @@ class Pause(Scene):
         )
 
 
+class Intro(Scene):
+    def __init__(self, director):
+        Scene.__init__(self, director)
+
+    def setup(self):
+        self.video = Video("assets/intro.mp4")
+        # self.video.play()
+
+    def update(self):
+        # if self.video.remaining_frames == 0:
+        #     self.finish()
+        if self.video.active == False:
+            self.finish()
+
+
+    def event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            self.skip()
+
+    def draw(self, screen, window_scale):
+        # self.video.draw_to(screen, (0, 0), (screen.get_width(), screen.get_height()))
+        self.video.draw(screen, (0, 0))
+
+    def finish(self):
+        self.director.set_scene(Game(self.director))
+        # self.video.stop()
+        self.video.close()
+
+    def skip(self):
+        key_moments = [5, 13, 17 ]
+        current_time = self.video.get_playback_data()["time"]
+        if current_time > key_moments[-1]:
+            self.finish()
+            return
+        next_key_moment = [x for x in key_moments if x > current_time][0]
+        self.video.seek(next_key_moment, accurate=True)
+        print("skipped from", current_time, ", to:", next_key_moment)
+        print("time now:", self.video.get_playback_data()["time"])
+
+
 def main():
     pygame.init()
     director = Director()
-    director.set_scene(Game(director))
+    director.set_scene(Intro(director))
+    # director.set_scene(Game(director))
     director.setup()
     director.loop()
     pygame.quit()
