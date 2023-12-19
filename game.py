@@ -118,8 +118,7 @@ class Intro(Scene):
 
     def setup(self):
         self.video = Video("assets/intro.mp4")
-        # self.video.play()
-
+        self.video.set_size((self.director.width, self.director.height))
     def update(self):
         # if self.video.remaining_frames == 0:
         #     self.finish()
@@ -132,22 +131,20 @@ class Intro(Scene):
             self.skip()
 
     def draw(self, screen, window_scale):
-        # self.video.draw_to(screen, (0, 0), (screen.get_width(), screen.get_height()))
         self.video.draw(screen, (0, 0))
 
     def finish(self):
         self.director.set_scene(Game(self.director))
-        # self.video.stop()
         self.video.close()
 
     def skip(self):
-        key_moments = [5, 13, 17 ]
+        key_moments = [6, 13.9]
         current_time = self.video.get_playback_data()["time"]
         if current_time > key_moments[-1]:
             self.finish()
             return
         next_key_moment = [x for x in key_moments if x > current_time][0]
-        self.video.seek(next_key_moment, accurate=True)
+        self.video.seek(next_key_moment, relative=False, accurate=True, seek_by_bytes=False)
         print("skipped from", current_time, ", to:", next_key_moment)
         print("time now:", self.video.get_playback_data()["time"])
 
