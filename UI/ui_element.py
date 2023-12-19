@@ -5,7 +5,7 @@ class UIElement:
     _right = 0
 
     def __init__(
-        self, x=0, y=0, image=None, path=None, right=None, width=None, height=None
+        self, x=0, y=0, image=None, path=None, right=None, width=None, height=None, scale=1
     ):
         if path:
             self.path = path
@@ -28,6 +28,8 @@ class UIElement:
         self.x = x
         self.y = y
         self.right = right
+        self.scale = scale
+        self.apply_scale()
 
     def update(self):
         pass
@@ -38,6 +40,12 @@ class UIElement:
     def load_image(self, path):
         return pygame.image.load(path)
 
+    def apply_scale(self):
+        print(f"Scaling {self.path} by {self.scale}")
+        self.width = int(self.width * self.scale)
+        self.height = int(self.height * self.scale)
+
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
     @property
     def right(self):
