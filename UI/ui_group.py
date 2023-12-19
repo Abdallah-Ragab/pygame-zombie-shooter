@@ -17,6 +17,7 @@ class UIGroup:
         padding_y=0,
         space_x=0,
         space_y=0,
+        scale=1,
     ):
         self.background = background
         self.elements = elements or []
@@ -29,6 +30,10 @@ class UIGroup:
         self.space_y = space_y
 
         self.init_dimensions()
+
+        self.scale = scale
+        self.apply_scale()
+
 
         if right:
             self.right = right
@@ -44,6 +49,21 @@ class UIGroup:
     def update(self):
         for element in self.elements:
             element.update()
+
+    def apply_scale(self):
+        self.width = int(self.width * self.scale)
+        self.height = int(self.height * self.scale)
+
+        if self.background:
+            self.background.scale = self.scale
+            self.background.apply_scale()
+
+        for element in self.elements:
+            element.scale = self.scale
+            element.apply_scale()
+
+        self.position()
+
 
     def draw(self, screen, elements=None):
         if self.background:
