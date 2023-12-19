@@ -27,6 +27,8 @@ class HUD(UIGroup):
 
     def update(self):
         super().update()
+        for element in self.elements:
+            print(f"{element.__class__.__name__}: right:{element.right}")
 
 
 
@@ -48,6 +50,10 @@ class HUD(UIGroup):
 
         ammo.set_y(avatar.y + avatar.height - ammo.height - ammo.height * 0.1)
         ammo.set_x(avatar.x - ammo.width)
+
+        money = next(filter(lambda element: isinstance(element, Money), self.elements))
+        money.set_x(money.x - 12)
+        money.set_y(money.y - 10)
 
 
 
