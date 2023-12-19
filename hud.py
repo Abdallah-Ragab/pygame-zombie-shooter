@@ -4,12 +4,7 @@ import pygame
 class HUD:
     def __init__(self, player):
         self.player = player
-        self.elements = [
-            Avatar(self.player),
-            HealthBar(self.player),
-            Ammo(),
-            Money()
-        ]
+        self.elements = [Avatar(self.player), HealthBar(self.player), Ammo(), Money()]
         self.scale(0.7)
 
     def update(self):
@@ -17,10 +12,9 @@ class HUD:
             element.update()
 
     def draw(self, screen):
-        # self.stack(screen, self.elements)
         self.Organize(screen)
 
-    def stack (self, screen, elements = None, padding=5, start_y = 20):
+    def stack(self, screen, elements=None, padding=5, start_y=20):
         if elements is None:
             elements = self.elements
 
@@ -31,17 +25,19 @@ class HUD:
             element.draw(screen)
             y += element.height + padding
 
-    def Organize(self, screen, padding_x=5, padding_y=5, start_y = 50, start_right = 50):
-
-        elements = list(filter(lambda element: not isinstance(element, Ammo), self.elements))
+    def Organize(self, screen, padding_x=5, padding_y=5, start_y=50, start_right=50):
+        elements = list(
+            filter(lambda element: not isinstance(element, Ammo), self.elements)
+        )
         for element in elements:
             element.right = float(start_right)
 
         self.stack(screen, elements, padding_y, start_y)
 
-        ammo = filter(lambda element: isinstance(element, Ammo), self.elements).__next__()
-        avatar = filter(lambda element: isinstance(element, Avatar), self.elements).__next__()
-
+        ammo = next(filter(lambda element: isinstance(element, Ammo), self.elements))
+        avatar = next(
+            filter(lambda element: isinstance(element, Avatar), self.elements)
+        )
 
         y = avatar.y + avatar.height - ammo.height
         right = avatar.right + avatar.width + padding_x
@@ -58,14 +54,21 @@ class HUD:
             element.right *= scale_by
             element.y *= scale_by
             if isinstance(element, HealthBar):
-                element.fore_bar = pygame.transform.scale(element.fore_bar, (element.fore_bar_width, element.height))
-                element.back_bar = pygame.transform.scale(element.back_bar, (element.width, element.height))
+                element.fore_bar = pygame.transform.scale(
+                    element.fore_bar, (element.fore_bar_width, element.height)
+                )
+                element.back_bar = pygame.transform.scale(
+                    element.back_bar, (element.width, element.height)
+                )
             else:
-                element.image = pygame.transform.scale(element.image, (element.width, element.height))
-
+                element.image = pygame.transform.scale(
+                    element.image, (element.width, element.height)
+                )
 
 
 class HUDElement:
+    _right = 0
+
     def __init__(self):
         self.assets_dir = "assets/hud"
 
@@ -73,10 +76,16 @@ class HUDElement:
         pass
 
     def draw(self, screen):
-        pass
+        screen.blit(self.image, (self.x, self.y))
 
-    def x_from_right(self, screen, distance, width):
-        return screen.get_width() - distance - width
+    @property
+    def right(self):
+        return self._right
+
+    @right.setter
+    def right(self, value):
+        self._right = float(value)
+        self.x = pygame.display.get_surface().get_width() - self._right - self.width
 
 
 class Avatar(HUDElement):
@@ -84,7 +93,9 @@ class Avatar(HUDElement):
         super().__init__()
         self.player = player
         self.character = 1
-        self.image = pygame.image.load(self.assets_dir + f"/avatars/{self.character}.png")
+        self.image = pygame.image.load(
+            self.assets_dir + f"/avatars/{self.character}.png"
+        )
         self.width = self.image.get_width()
         self.height = self.image.get_height()
         self.x = None
@@ -120,9 +131,9 @@ class HealthBar(HUDElement):
         return max(self.width * health / self.max_health, 0)
 
     def update(self):
-        # self.fore_bar = pygame.transform.scale(self.fore_bar, (self.fore_bar_width, self.back_bar.get_height()))
-        self.fore_bar = self.fore_bar.subsurface((0, 0, self.fore_bar_width, self.height))
-        print(self.fore_bar_width)
+        self.fore_bar = self.fore_bar.subsurface(
+            (0, 0, self.fore_bar_width, self.height)
+        )
 
     def draw(self, screen):
         self.x = self.x_from_right(screen, self.right, self.width)
@@ -142,7 +153,6 @@ class Ammo(HUDElement):
         self.ammo = 10
 
     def update(self):
-        # update ammo
         pass
 
     def draw(self, screen):
@@ -151,7 +161,7 @@ class Ammo(HUDElement):
         font = pygame.font.Font(None, 24)
         text = font.render(str(self.ammo), True, (255, 255, 255))
         text_x = self.x + (self.width / 2) - (text.get_width() / 2)
-        text_y = self.y + (self.height / 2) - (text.get_height() / 2) +5
+        text_y = self.y + (self.height / 2) - (text.get_height() / 2) + 5
         screen.blit(text, (text_x, text_y))
 
 
@@ -164,7 +174,7 @@ class Money(HUDElement):
         self.x = None
         self.y = 200
         self.right = 50
-        self.money = 100  # Constant money text
+        self.money = 100
 
     def update(self):
         pass
@@ -174,7 +184,6 @@ class Money(HUDElement):
         screen.blit(self.image, (self.x, self.y))
         font = pygame.font.Font(None, 24)
         text = font.render(str(self.money), True, (255, 255, 255))
-
         text_x = self.x + (self.width / 2) - (text.get_width() / 2)
         text_y = self.y + (self.height / 2) - (text.get_height() / 2)
         screen.blit(text, (text_x, text_y))
