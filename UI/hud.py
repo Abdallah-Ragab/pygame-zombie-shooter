@@ -17,18 +17,17 @@ class HUD(UIGroup):
         padding_y=0,
         space_x=0,
         space_y=0,
+        scale=1,
     ):
         super().__init__(
-            elements, background, x, y, right, padding_x, padding_y, space_x, space_y
+            elements, background, x, y, right, padding_x, padding_y, space_x, space_y, scale
         )
+        print(f"Scaled HUD to {self.scale}")
         self.player = player
 
     def update(self):
         super().update()
-        print("-"*20)
-        for element in self.elements:
-            print(f"{element.__class__.__name__}| x:{element.x}, y:{element.y}| w:{element.width}, h:{element.height}")
-        print("-"*20)
+
 
 
     def draw(self, screen):
@@ -45,15 +44,11 @@ class HUD(UIGroup):
             filter(lambda element: not isinstance(element, Ammo), self.elements)
         )
 
-        self.stack_vertical(elements)
+        self.stack_vertical(elements, align="right")
 
-        ammo.set_y(avatar.y + avatar.height - ammo.height)
-        ammo.set_right(avatar.right + avatar.width + self.padding_x)
+        ammo.set_y(avatar.y + avatar.height - ammo.height - ammo.height * 0.1)
+        ammo.set_x(avatar.x - ammo.width)
 
-        print("-"*10, "POSITION", "-"*10)
-        for element in self.elements:
-            print(f"{element.__class__.__name__}| x:{element.x}, y:{element.y}| w:{element.width}, h:{element.height}")
-        print("-"*20)
 
 
 class Avatar(UIElement):
