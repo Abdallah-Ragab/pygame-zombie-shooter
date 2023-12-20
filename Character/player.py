@@ -115,7 +115,7 @@ class Player(Character):
             self.walk_down()
 
     def walk_right(self):
-        if self.within_right_limit():
+        if not self.within_right_limit():
             return
         self.moving = True
         if self.direction == -1:
@@ -181,18 +181,22 @@ class Player(Character):
                 self.animation.switch_animation("walk")
 
     def within_top_limit(self):
-        feet_y = self.rect.bottom + self.height * 0.2
+        feet_y = self.rect.bottom - self.height * 0.10
         top_condition = feet_y >= 500
+        print("within_top_limit:", top_condition)  # Add this line
         return top_condition
 
     def within_bottom_limit(self):
         bottom_condition = self.rect.bottom <= pygame.display.get_surface().get_rect().bottom
+        print("within_bottom_limit:", bottom_condition)  # Add this line
         return bottom_condition
 
     def within_right_limit(self):
         right_condition = self.rect.right <= self.scene.background.get_rect().right
+        print("within_right_limit:", right_condition)  # Add this line
         return right_condition
 
     def within_left_limit(self):
         left_condition = self.rect.left >= self.scene.background.get_rect().left
+        print("within_left_limit:", left_condition)  # Add this line
         return left_condition
