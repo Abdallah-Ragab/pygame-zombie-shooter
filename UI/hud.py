@@ -8,7 +8,6 @@ class HUD(UIGroup):
     def __init__(
         self,
         player,
-        elements: [UIElement | Button | UIGroup] = None,
         background: UIElement | Button | UIGroup = None,
         x=0,
         y=0,
@@ -19,6 +18,18 @@ class HUD(UIGroup):
         space_y=0,
         scale=1,
     ):
+        elements = [
+            Avatar(self.Player, path="assets/hud/avatars/1.png"),
+            HealthBar(
+                self.Player,
+                elements=[
+                    UIElement(path="assets/hud/health_bar_back.png"),
+                    UIElement(path="assets/hud/health_bar_front.png"),
+                ],
+            ),
+            Ammo(self.Player, path="assets/hud/ammo.png"),
+            Money(self.Player, path="assets/hud/money.png"),
+        ]
         super().__init__(
             elements,
             background,
