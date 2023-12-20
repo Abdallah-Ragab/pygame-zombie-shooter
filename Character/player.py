@@ -1,5 +1,4 @@
 import random
-import time
 import pygame
 from .character import Character
 from Animation import AnimationController, Animation, SequenceAnimation, TransitionRule
@@ -13,6 +12,8 @@ class Player(Character):
             Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
             Animation("elbow", "D:\\game assets\\swat 1\\elbow", speed=1.5),
             Animation("kick", "D:\\game assets\\swat 1\\kick", speed=1.5),
+            Animation("die", "D:\\game assets\\swat 1\\die", speed=1.5),
+            Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
             Animation(
                 "idle_to_walk", "D:\\game assets\\swat 1\\idle to walk", speed=1.5
             ),
@@ -23,18 +24,14 @@ class Player(Character):
                     Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
                 ],
             ),
-            Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
         ],
         default="idle",
         transitions=[
             TransitionRule("idle", "walk", "idle_to_walk", True),
         ],
     )
-    time = time.time()
     max_bullets = 32
     bullets = max_bullets
-    max_health = 100
-    health = max_health
 
     def update(self):
         active_animation = self.animation.active_animation
@@ -70,12 +67,12 @@ class Player(Character):
                     self.y_speed = self.speed[1]
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and self.bullets > 0:
-                    self.animation.switch_animation("fire", loop=False)
-                    self.bullets -= 1 if self.bullets > 0 else 0
-                    self.health -= 5 if self.health > 0 else 0
-                    # print(self.health)
-                    if self.moving:
-                        self.animation.switch_animation("walk_fire", loop=False)
+                self.animation.switch_animation("fire", loop=False)
+                self.bullets -= 1 if self.bullets > 0 else 0
+                self.health -= 5 if self.health > 0 else 0
+                # print(self.health)
+                if self.moving:
+                    self.animation.switch_animation("walk_fire", loop=False)
 
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
@@ -90,7 +87,6 @@ class Player(Character):
                     self.animation.switch_animation("walk")
 
         return super().event(event)
-
 
     def event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -154,7 +150,7 @@ class Player(Character):
             if self.bullets > 0:
                 self.shoot()
         elif event.button == 3:
-                self.melee()
+            self.melee()
 
     def melee(self):
         animations = ["elbow", "kick"]
@@ -187,7 +183,9 @@ class Player(Character):
         return top_condition
 
     def within_bottom_limit(self):
-        bottom_condition = self.rect.bottom <= pygame.display.get_surface().get_rect().bottom
+        bottom_condition = (
+            self.rect.bottom <= pygame.display.get_surface().get_rect().bottom
+        )
         print("within_bottom_limit:", bottom_condition)  # Add this line
         return bottom_condition
 
