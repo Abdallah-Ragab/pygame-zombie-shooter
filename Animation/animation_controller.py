@@ -1,5 +1,4 @@
 from copy import deepcopy
-from .animation import Animation
 from .sequence_animation import SequenceAnimation
 
 
@@ -23,7 +22,7 @@ class AnimationController:
             self.active_animation = self.animation_dict[self.default]
         return self.active_animation.get_frame()
 
-    def set_animation(self, name, force=False):
+    def set_active_animation(self, name, force=False):
         if name not in self.animation_dict:
             raise KeyError(f"Animation {name} not found")
 
@@ -80,7 +79,7 @@ class AnimationController:
         )
         return transition_animation
 
-    def switch_animation(self, name, ignore_transition=False, force=False, loop=True):
+    def set_animation(self, name, ignore_transition=False, force=False, loop=True):
         if not name in self.animation_dict:
             raise KeyError(f"Animation {name} not found")
 
@@ -109,7 +108,7 @@ class AnimationController:
 
         # print("animation_name: ", animation_name)
         self.loop = loop
-        self.set_animation(animation_name, force=force)
+        self.set_active_animation(animation_name, force=force)
         self.reset_animation()
 
     def reset_animation(self):

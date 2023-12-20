@@ -45,51 +45,6 @@ class Player(Character):
 
     def event(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
-                self.moving = True
-                if event.key == pygame.K_RIGHT:
-                    if self.direction == -1:
-                        self.animation.switch_animation("turn_walk")
-                    else:
-                        self.animation.switch_animation("walk")
-                    self.x_speed = self.speed[0]
-                elif event.key == pygame.K_LEFT:
-                    if self.direction == 1:
-                        self.animation.switch_animation("turn_walk")
-                    else:
-                        self.animation.switch_animation("walk")
-                    self.x_speed = -self.speed[0]
-                if event.key == pygame.K_UP:
-                    self.animation.switch_animation("walk")
-                    self.y_speed = -self.speed[1]
-                elif event.key == pygame.K_DOWN:
-                    self.animation.switch_animation("walk")
-                    self.y_speed = self.speed[1]
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1 and self.bullets > 0:
-                self.animation.switch_animation("fire", loop=False)
-                self.bullets -= 1 if self.bullets > 0 else 0
-                self.health -= 5 if self.health > 0 else 0
-                # print(self.health)
-                if self.moving:
-                    self.animation.switch_animation("walk_fire", loop=False)
-
-        elif event.type == pygame.KEYUP:
-            if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
-                self.animation.switch_animation("idle")
-                self.moving = False
-                self.x_speed, self.y_speed = 0, 0
-
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1 and self.bullets > 0:
-                self.animation.switch_animation("idle")
-                if self.moving:
-                    self.animation.switch_animation("walk")
-
-        return super().event(event)
-
-    def event(self, event):
-        if event.type == pygame.KEYDOWN:
             self.handle_keydown(event)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_mousebuttondown(event)
@@ -115,9 +70,9 @@ class Player(Character):
             return
         self.moving = True
         if self.direction == -1:
-            self.animation.switch_animation("turn_walk")
+            self.animation.set_animation("turn_walk")
         else:
-            self.animation.switch_animation("walk")
+            self.animation.set_animation("walk")
         self.x_speed = self.speed[0]
 
     def walk_left(self):
@@ -125,23 +80,23 @@ class Player(Character):
             return
         self.moving = True
         if self.direction == 1:
-            self.animation.switch_animation("turn_walk")
+            self.animation.set_animation("turn_walk")
         else:
-            self.animation.switch_animation("walk")
+            self.animation.set_animation("walk")
         self.x_speed = -self.speed[0]
 
     def walk_up(self):
         if not self.within_top_limit():
             return
         self.moving = True
-        self.animation.switch_animation("walk")
+        self.animation.set_animation("walk")
         self.y_speed = -self.speed[1]
 
     def walk_down(self):
         if not self.within_bottom_limit():
             return
         self.moving = True
-        self.animation.switch_animation("walk")
+        self.animation.set_animation("walk")
         self.y_speed = self.speed[1]
 
     def handle_mousebuttondown(self, event):
@@ -155,10 +110,10 @@ class Player(Character):
     def melee(self):
         animations = ["elbow", "kick"]
         random_animation = random.choice(animations)
-        self.animation.switch_animation(random_animation, loop=False)
+        self.animation.set_animation(random_animation, loop=False)
 
     def shoot(self):
-        self.animation.switch_animation("fire", loop=False)
+        self.animation.set_animation("fire", loop=False)
         self.bullets -= 1 if self.bullets > 0 else 0
 
     def handle_keyup(self, event):
@@ -166,7 +121,7 @@ class Player(Character):
             self.idle()
 
     def idle(self):
-        self.animation.switch_animation("idle")
+        self.animation.set_animation("idle")
         self.moving = False
         self.x_speed, self.y_speed = 0, 0
 
@@ -174,7 +129,7 @@ class Player(Character):
         if event.button == 1 and self.bullets > 0:
             self.idle()
             if self.moving:
-                self.animation.switch_animation("walk")
+                self.animation.set_animation("walk")
 
     def within_top_limit(self):
         feet_y = self.rect.bottom - self.height * 0.10
