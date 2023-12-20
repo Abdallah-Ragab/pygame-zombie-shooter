@@ -61,7 +61,7 @@ class AnimationController:
         if transition_animation:
             return transition_animation
         if reverse:
-            print(f"Reversing animation {transition.intermediate_animation}")
+            # print(f"Reversing animation {transition.intermediate_animation}")
             intermediate_animation = deepcopy(
                 self.animation_dict[transition.intermediate_animation]
             )
@@ -91,11 +91,11 @@ class AnimationController:
         )
         to_animation = name
 
-        print("from: ", from_animation, "to: ", to_animation)
+        # print("from: ", from_animation, "to: ", to_animation)
 
         if not ignore_transition:
             transition, reverse = self.get_transition(from_animation, to_animation)
-            print("transition: ", transition)
+            # print("transition: ", transition)
             if transition:
                 animation = self.get_transition_animation(
                     from_animation, to_animation, transition, reverse=reverse
@@ -107,7 +107,7 @@ class AnimationController:
         else:
             animation_name = to_animation
 
-        print("animation_name: ", animation_name)
+        # print("animation_name: ", animation_name)
         self.loop = loop
         self.set_animation(animation_name, force=force)
         self.reset_animation()

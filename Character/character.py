@@ -41,7 +41,7 @@ class Character(pygame.sprite.Sprite):
     def image(self):
         frame = self.animation.update()
         image = frame.image
-        print("frame: ", frame)
+        # print("frame: ", frame)
 
         if self.direction == -1:
             image = pygame.transform.flip(image, True, False)

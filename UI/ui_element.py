@@ -41,7 +41,7 @@ class UIElement:
         return pygame.image.load(path)
 
     def apply_scale(self):
-        print(f"Scaling {self.path} by {self.scale}")
+        # print(f"Scaling {self.path} by {self.scale}")
         self.width = int(self.width * self.scale)
         self.height = int(self.height * self.scale)
 

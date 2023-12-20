@@ -26,7 +26,7 @@ class Cursor:
         camera = self.player.scene.camera
         player_rect = camera.apply(self.player.rect)
 
-        print(f"player.x: {player_rect.centerx}, player.y: {player_rect.centery}")
+        # print(f"player.x: {player_rect.centerx}, player.y: {player_rect.centery}")
         return (
             player_rect.centerx + self.x_player_offset,
             player_rect.centery + self.y_player_offset,
@@ -65,7 +65,7 @@ class Cursor:
 
         distance, angle = self.convert_point(dx, dy)
 
-        print(f"distance: {distance}, angle: {angle}")
+        # print(f"distance: {distance}, angle: {angle}")
 
         angle_abs = abs(angle)
         angle_sign = 1 if angle > 0 else -1

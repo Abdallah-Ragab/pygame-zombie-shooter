@@ -21,7 +21,7 @@ class Game(Scene):
     def setup(self):
         self.screen_width = self.director.width
         self.screen_height = self.director.height
-        self.background = pygame.image.load("assets/levels/forest.png")
+        self.background = pygame.image.load("assets/levels/city.jpg")
         self.scene_width = self.background.get_width()
         self.scene_height = self.background.get_height()
         self.camera = Camera(
@@ -35,7 +35,7 @@ class Game(Scene):
         self.PlayerGroup.set_camera(self.camera)
 
         self.cursor = Cursor(
-            self.Player, min_distance=self.Player.width // 2, max_angle=30, DEBUG=False
+            self.Player, min_distance=self.Player.width // 2, max_angle=20, DEBUG=False
         )
         self.hud = HUD(
             self.Player,
@@ -145,8 +145,8 @@ class Intro(Scene):
             return
         next_key_moment = [x for x in key_moments if x > current_time][0]
         self.video.seek(next_key_moment, relative=False, accurate=True, seek_by_bytes=False)
-        print("skipped from", current_time, ", to:", next_key_moment)
-        print("time now:", self.video.get_playback_data()["time"])
+        # print("skipped from", current_time, ", to:", next_key_moment)
+        # print("time now:", self.video.get_playback_data()["time"])
 
 
 def main():
