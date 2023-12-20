@@ -3,7 +3,8 @@ import pygame
 
 class Character(pygame.sprite.Sprite):
     moving = False
-    health = 100
+    max_health = 100
+    health = max_health
 
     def __init__(
         self,
