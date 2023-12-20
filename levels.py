@@ -1,5 +1,5 @@
 import pygame
-from Character import CameraAwareGroupSingle, Player
+from Character import CameraAwareGroupSingle, Player, CameraAwareGroup
 from UI import HUD, Ammo, Avatar, HealthBar, Money, UIElement
 from camera import Camera
 from director import Scene
@@ -30,6 +30,9 @@ class Level(Scene):
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
 
+        self.EnemyGroup = CameraAwareGroup()
+        self.EnemyGroup.set_camera(self.camera)
+
         self.cursor = Cursor(
             self.Player, min_distance=self.Player.width // 2, max_angle=20, DEBUG=False
         )
@@ -44,6 +47,7 @@ class Level(Scene):
 
     def update(self):
         self.PlayerGroup.update()
+        self.EnemyGroup.update()
         self.camera.update(self.Player)
         self.cursor.update()
         self.hud.update()
@@ -51,10 +55,12 @@ class Level(Scene):
     def draw(self, screen, window_scale):
         screen.blit(self.background, self.camera.apply(self.background))
         self.PlayerGroup.draw(screen)
+        self.EnemyGroup.draw(screen)
         self.hud.draw(screen)
         self.cursor.draw(screen)
 
     def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-            self.director.set_scene(Pause(self.director))
+        # if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+        #     self.director.set_scene(Pause(self.director))
         self.PlayerGroup.sprite.event(event)
+        self.EnemyGroup.event(event)
