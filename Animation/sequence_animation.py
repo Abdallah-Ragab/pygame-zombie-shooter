@@ -48,6 +48,11 @@ class SequenceAnimation:
 
         return frame
 
+    def get_nth_frame(self, n):
+        animation_index = n // self.animations[self.animation_index].frame_count
+        animation = self.animations[animation_index]
+        return animation.get_nth_frame(n % animation.frame_count)
+
     def reset(self):
         self.animation_index = 0
         self.FINISHED_FLAG = False
