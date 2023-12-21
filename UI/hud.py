@@ -18,6 +18,7 @@ class HUD(UIGroup):
         space_y=0,
         scale=1,
     ):
+        self.Player = player
         elements = [
             Avatar(self.Player, path="assets/hud/avatars/1.png"),
             HealthBar(
