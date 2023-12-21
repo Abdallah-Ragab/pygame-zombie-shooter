@@ -14,7 +14,7 @@ class Character(pygame.sprite.Sprite):
         height=None,
         width=None,
         speed: tuple = (1, 1),
-        direction: int = 1,
+        direction: int = -1,
         *args,
         **kwargs
     ):
