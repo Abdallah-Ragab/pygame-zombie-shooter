@@ -11,8 +11,8 @@ class Level(Scene):
         self,
         director,
     ):
-        Scene.__init__(self, director)
         self.name = "forest"
+        Scene.__init__(self, director)
 
     def setup(self):
         self.background = pygame.image.load(f"assets/levels/{self.name}.jpg")
@@ -20,6 +20,7 @@ class Level(Scene):
         self.screen_height = self.director.height
         self.scene_width = self.background.get_width()
         self.scene_height = self.background.get_height()
+
         self.camera = Camera(
             self.screen_width, self.screen_height, self.scene_width, self.scene_height
         )
@@ -60,7 +61,5 @@ class Level(Scene):
         self.cursor.draw(screen)
 
     def event(self, event):
-        # if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-        #     self.director.set_scene(Pause(self.director))
         self.PlayerGroup.sprite.event(event)
         self.EnemyGroup.event(event)
