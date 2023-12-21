@@ -14,6 +14,8 @@ class Player(Character):
             Animation("kick", "D:\\game assets\\swat 1\\kick", speed=1.5),
             Animation("die", "D:\\game assets\\swat 1\\die", speed=1.5),
             Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
+            Animation("hit 1", "D:\\game assets\\swat 1\\hit 1", speed=1.5),
+            Animation("hit 2", "D:\\game assets\\swat 1\\hit 2", speed=1.5),
             Animation(
                 "idle_to_walk", "D:\\game assets\\swat 1\\idle to walk", speed=1.5
             ),
@@ -41,6 +43,13 @@ class Player(Character):
         if active_animation is not None and active_animation.name == "turn":
             if active_animation.FINISHED_FLAG:
                 self.direction *= -1
+
+        if active_animation is not None and not active_animation.name == "walk":
+            self.walking = False
+
+        if self.health <= 0:
+            self.die()
+
         return super().update()
 
     def event(self, event):
@@ -124,6 +133,22 @@ class Player(Character):
         self.animation.set_animation("idle")
         self.moving = False
         self.x_speed, self.y_speed = 0, 0
+
+    def die(self):
+        self.animation.set_animation("die", loop=False)
+        self.moving = False
+        self.x_speed, self.y_speed = 0, 0
+        if self.animation.active_animation.FINISHED_FLAG:
+            self.DEAD = True
+
+    def get_hit(self, damage):
+        animation = random.choice(["hit 1", "hit 2"])
+        self.animation.set_animation(animation, loop=False)
+        self.moving = False
+        self.health -= damage
+        if self.health <= 0:
+            self.die()
+
 
     def handle_mousebuttonup(self, event):
         if event.button == 1 and self.bullets > 0:
