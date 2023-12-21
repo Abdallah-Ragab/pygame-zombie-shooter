@@ -47,7 +47,9 @@ class Character(pygame.sprite.Sprite):
         if self.direction == -1:
             image = pygame.transform.flip(image, True, False)
 
-        return pygame.transform.scale(image, (self.width, self.height))
+        if self.width and self.height:
+            return pygame.transform.scale(image, (self.width, self.height))
+        return image
 
     def update(self):
         self.apply_movement()
