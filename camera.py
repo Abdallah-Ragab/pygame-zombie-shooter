@@ -3,7 +3,7 @@ import pygame
 
 class Camera:
     def __init__(self, width, height, scene_width, scene_height):
-        self.camera = pygame.Rect(0, 0, width, height)
+        self.rect = pygame.Rect(0, 0, width, height)
         self.width = width
         self.height = height
         self.scene_width = scene_width
@@ -16,7 +16,7 @@ class Camera:
             rect = entity.rect
         else:
             rect = entity.get_rect()
-        return rect.move(self.camera.topleft)
+        return rect.move(self.rect.topleft)
 
     def update(self, target):
         shooting_x_pos = self.width // 3
@@ -24,5 +24,5 @@ class Camera:
             shooting_x_pos = self.width - shooting_x_pos
         target_x_offset = shooting_x_pos - target.rect.centerx
         reaction_x = min(0, target_x_offset)
-        reaction_x = max(-(self.scene_width - self.width), reaction_x)  # right
-        self.camera.x = reaction_x
+        reaction_x = max(-(self.scene_width - self.width), reaction_x)
+        self.rect.x = reaction_x
