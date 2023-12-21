@@ -131,6 +131,7 @@ class Player(Character):
             if self.moving:
                 self.animation.set_animation("walk")
 
+    # FIXME: it only check at first key down, not when key is held down
     def within_top_limit(self):
         feet_y = self.rect.bottom - self.height * 0.10
         top_condition = feet_y >= 500
