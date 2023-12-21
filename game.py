@@ -9,73 +9,11 @@ from cursor import Cursor
 
 # from hud import HUD
 from UI import HUD, Avatar, HealthBar, Ammo, Money, UIElement
+from levels import Level
 
 
-class Game(Scene):
-    def __init__(
-        self,
-        director,
-    ):
-        Scene.__init__(self, director)
-
-    def setup(self):
-        self.screen_width = self.director.width
-        self.screen_height = self.director.height
-        self.background = pygame.image.load("assets/levels/city.jpg")
-        self.scene_width = self.background.get_width()
-        self.scene_height = self.background.get_height()
-        self.camera = Camera(
-            self.screen_width, self.screen_height, self.scene_width, self.scene_height
-        )
-
-        self.Player = Player(
-            scene=self, x=0, y=400, height=250, width=250, speed=(3, 3)
-        )
-        self.PlayerGroup = CameraAwareGroupSingle(self.Player)
-        self.PlayerGroup.set_camera(self.camera)
-
-        self.cursor = Cursor(
-            self.Player, min_distance=self.Player.width // 2, max_angle=20, DEBUG=False
-        )
-        self.hud = HUD(
-            self.Player,
-            elements=[
-                Avatar(self.Player, path="assets/hud/avatars/1.png"),
-                HealthBar(
-                    self.Player,
-                    elements=[
-                        UIElement(path="assets/hud/health_bar_back.png"),
-                        UIElement(path="assets/hud/health_bar_front.png"),
-                    ],
-                ),
-                Ammo(self.Player, path="assets/hud/ammo.png"),
-                Money(self.Player, path="assets/hud/money.png"),
-            ],
-            right=25,
-            y=50,
-            scale=0.6,
-            space_y=-5,
-            padding_x=10,
-        )
-        # self.hud.stack_over()
-
-    def update(self):
-        self.PlayerGroup.update()
-        self.camera.update(self.Player)
-        self.cursor.update()
-        self.hud.update()
-
-    def draw(self, screen, window_scale):
-        screen.blit(self.background, self.camera.apply(self.background))
-        self.PlayerGroup.draw(screen)
-        self.hud.draw(screen)
-        self.cursor.draw(screen)
-
-    def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-            self.director.set_scene(Pause(self.director))
-        self.PlayerGroup.sprite.event(event)
-
+class LevelOne(Level):
+    pass
 
 class Pause(Scene):
     def __init__(self, director):
@@ -120,11 +58,8 @@ class Intro(Scene):
         self.video = Video("assets/intro.mp4")
         self.video.set_size((self.director.width, self.director.height))
     def update(self):
-        # if self.video.remaining_frames == 0:
-        #     self.finish()
         if self.video.active == False:
             self.finish()
-
 
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -134,7 +69,7 @@ class Intro(Scene):
         self.video.draw(screen, (0, 0))
 
     def finish(self):
-        self.director.set_scene(Game(self.director))
+        self.director.set_scene(LevelOne(self.director))
         self.video.close()
 
     def skip(self):
