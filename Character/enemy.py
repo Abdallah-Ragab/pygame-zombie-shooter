@@ -4,7 +4,7 @@ from .character import Character
 
 
 class Enemy(Character):
-    sense_range = 500
+    sense_range = 700
     DEAD = False
 
     def __init__(
@@ -45,8 +45,8 @@ class Enemy(Character):
         super().__init__(scene, x, y, height, width, speed, direction)
 
     def update(self):
-        super().update()
         self.chase_player(self.scene.Player)
+        super().update()
 
     def sense_player(self, player):
         x = self.rect.x - player.rect.x
@@ -57,23 +57,37 @@ class Enemy(Character):
 
     def chase_player(self, player):
         x, y, within_range = self.sense_player(player)
-        print("x, y, within_range: ", x, y, within_range)
         if within_range:
-            direction = -1 if x > 0 else 1
-            self.moving = True
-            if self.direction == -1:
-                self.animation.set_animation("turn_walk")
+            if self.collide_player(player):
+                self.attack_player(player)
             else:
+                self.direction = -1 if x > 0 else 1
+                self.moving = True
+                # if self.direction == -1:
+                #     self.animation.set_animation("turn_walk")
+                # else:
+                #     self.animation.set_animation("walk")
                 self.animation.set_animation("walk")
-            self.x_speed = self.speed[0]
-            self.x_speed = -self.speed[0] if x > 0 else self.speed[0]
-            self.y_speed = -self.speed[1] if y > 0 else self.speed[1]
+                self.x_speed = self.speed[0]
+                self.x_speed = -self.speed[0] if x > 0 else self.speed[0]
+                self.y_speed = -self.speed[1] if y > 0 else self.speed[1]
         else:
             self.moving = False
             self.animation.set_animation("idle")
             self.x_speed = 0
             self.y_speed = 0
 
+    def collide_player(self, player):
+        return abs(self.rect.centerx - player.rect.centerx) < 100 and abs(self.rect.centery - player.rect.centery) < 100
+
+    def attack_player(self, player):
+        if player.health <= 0:
+            return
+        self.moving = False
+        self.animation.set_animation("attack", loop=False)
+        if self.animation.active_animation.FINISHED_FLAG:
+            player.get_hit(10)
+            self.animation.set_animation("idle")
 
 class EnemyManager:
     def __init__(self, scene, enemies, max_enemies=5):
@@ -112,8 +126,7 @@ class EnemyManager:
             x = (
                 enemy_rate * i
                 + 1
-                + random.randint(0, enemy_rate)
-                - random.randint(0, enemy_rate)
+                + random.randint(-enemy_rate, enemy_rate)
             )
             x = min(x, level_width - enemy_rate)
 
