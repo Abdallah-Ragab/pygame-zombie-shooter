@@ -44,6 +44,9 @@ class Animation:
 
         return frame
 
+    def get_nth_frame(self, n):
+        return Frame(os.path.join(self.path, self.files[n]))
+
     def reset(self):
         self.index = self.start
         self.FINISHED_FLAG = False
