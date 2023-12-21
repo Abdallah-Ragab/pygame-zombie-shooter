@@ -1,5 +1,5 @@
 import pygame
-from Character import CameraAwareGroupSingle, Player, CameraAwareGroup
+from Character import CameraAwareGroupSingle, Player, CameraAwareGroup, EnemyManager
 from UI import HUD
 from camera import Camera
 from director import Scene
@@ -26,13 +26,15 @@ class Level(Scene):
         )
 
         self.Player = Player(
-            scene=self, x=0, y=400, height=250, width=250, speed=(3, 3)
+            scene=self, x=0, y=400, height=250, width=250, speed=(4, 2)
         )
         self.PlayerGroup = CameraAwareGroupSingle(self.Player)
         self.PlayerGroup.set_camera(self.camera)
 
         self.EnemyGroup = CameraAwareGroup()
         self.EnemyGroup.set_camera(self.camera)
+
+        self.EnemyManager = EnemyManager(self, ['zombie'] , max_enemies=5)
 
         self.cursor = Cursor(
             self.Player, min_distance=self.Player.width // 2, max_angle=20, DEBUG=False
@@ -49,6 +51,7 @@ class Level(Scene):
     def update(self):
         self.PlayerGroup.update()
         self.EnemyGroup.update()
+        self.EnemyManager.update()
         self.camera.update(self.Player)
         self.cursor.update()
         self.hud.update()
