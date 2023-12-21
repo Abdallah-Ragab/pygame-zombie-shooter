@@ -5,6 +5,7 @@ class Character(pygame.sprite.Sprite):
     moving = False
     max_health = 100
     health = max_health
+    DEAD = False
 
     def __init__(
         self,
@@ -16,7 +17,7 @@ class Character(pygame.sprite.Sprite):
         speed: tuple = (1, 1),
         direction: int = -1,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__()
 
@@ -40,9 +41,11 @@ class Character(pygame.sprite.Sprite):
 
     @property
     def image(self):
+        if self.DEAD:
+            return self.animation.active_animation.get_nth_frame(-1).image
         frame = self.animation.update()
         image = frame.image
-        # print("frame: ", frame)
+        # print(f"{'.'.join(frame.path.split('/'))}: ", frame)
 
         if self.direction == -1:
             image = pygame.transform.flip(image, True, False)
