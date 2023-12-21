@@ -1,6 +1,6 @@
 import pygame
 from Character import CameraAwareGroupSingle, Player, CameraAwareGroup
-from UI import HUD, Ammo, Avatar, HealthBar, Money, UIElement
+from UI import HUD
 from camera import Camera
 from director import Scene
 from cursor import Cursor
