@@ -29,7 +29,10 @@ class AnimationController:
         if self.active_animation.name == name and not force:
             return
 
+        print(f"Setting active animation to {name}")
         self.active_animation = self.animation_dict[name]
+        self.reset_animation()
+
 
     def add_animation(self, animation):
         self.animation_dict[animation.name] = animation
@@ -109,7 +112,6 @@ class AnimationController:
         # print("animation_name: ", animation_name)
         self.loop = loop
         self.set_active_animation(animation_name, force=force)
-        self.reset_animation()
 
     def reset_animation(self):
         self.active_animation.reset()
