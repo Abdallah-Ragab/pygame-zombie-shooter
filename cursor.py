@@ -115,6 +115,7 @@ class Cursor:
     def draw(self, screen):
         self.calculate_position(screen)
         screen.blit(self.image, self.rect)
+        self.draw_debug(screen)
 
     def update(self):
         self.player_pos = self.claculate_player_pos()
