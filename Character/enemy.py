@@ -150,16 +150,16 @@ class EnemyManager:
             name = random.choice(self.enemy_types)
             x = (
                 enemy_rate * i
-                + 1
                 + random.randint(-enemy_rate, enemy_rate)
             )
             x = min(x, level_width - enemy_rate)
+            x = max(x, 0)
 
             # turn x from scene coordinates to camera coordinates
             x = x - self.scene.camera.rect.x
 
             y = random.randint(
-                self.scene.scene_height - enemy_height - 150,
+                self.scene.scene_height - enemy_height - 120,
                 self.scene.scene_height - enemy_height,
             )
             self.enemies.append(
@@ -175,3 +175,9 @@ class EnemyManager:
                     self.spawn_enemy(enemy)
                 else:
                     self.despawn_enemy(enemy)
+
+    def all_dead(self):
+        print(
+            "Total enemies: ", len(self.enemies), "Dead enemies: ", len([enemy for enemy in self.enemies if enemy.DEAD])
+        )
+        return all([enemy.DEAD for enemy in self.enemies])
