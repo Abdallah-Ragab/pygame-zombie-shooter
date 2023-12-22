@@ -120,3 +120,6 @@ class Cursor:
     def update(self):
         self.player_pos = self.claculate_player_pos()
 
+    def collide(self, rect):
+        return self.rect.colliderect(self.image.get_rect())
+
