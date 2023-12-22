@@ -8,16 +8,16 @@ from music import Player as MusicPlayer
 
 
 class Level(Scene):
+    map = "city"
     music = MusicPlayer()
     def __init__(
         self,
         director,
     ):
-        self.name = "city"
         Scene.__init__(self, director)
 
     def setup(self):
-        self.background = pygame.image.load(f"assets/levels/{self.name}.jpg")
+        self.background = pygame.image.load(f"assets/levels/{self.map}.jpg")
         self.screen_width = self.director.width
         self.screen_height = self.director.height
         self.scene_width = self.background.get_width()
@@ -68,14 +68,25 @@ class Level(Scene):
         self.cursor.draw(screen)
 
     def event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            from game import MainMenu
+            self.director.set_scene(MainMenu(self.director))
+
         self.PlayerGroup.sprite.event(event)
         self.EnemyGroup.event(event)
+
+
 
     def check_win_condition(self):
         if self.Player.DEAD:
             self.director.set_scene(GameOver(self.director))
         elif self.EnemyManager.all_dead():
             self.director.set_scene(Win(self.director))
+
+    def reward_player(self):
+        money = self.director.storage.get("money", 0)
+        money += 100
+        self.director.storage.set("money", money)
 
 
 class GameOver(Scene):
@@ -93,8 +104,9 @@ class GameOver(Scene):
         pass
 
     def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-            self.director.set_scene(Game(self.director))
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            from game import MainMenu
+            self.director.set_scene(MainMenu(self.director))
 
     def draw(self, screen, window_scale):
         background = pygame.Rect(
@@ -129,8 +141,9 @@ class Win(Scene):
         pass
 
     def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-            self.director.set_scene(Game(self.director))
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            from game import MainMenu
+            self.director.set_scene(MainMenu(self.director))
 
     def draw(self, screen, window_scale):
         background = pygame.Rect(
