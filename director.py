@@ -1,9 +1,11 @@
 import pygame
 import sys
 from fractions import Fraction
+from storage import JsonStorage
 
 
 class Director:
+    storage = JsonStorage
     def __init__(self):
         self.width = 1280
         self.height = 720
@@ -29,21 +31,22 @@ class Director:
                     self.aspect_ratio_resize(event.w, event.h)
                 if event.type == pygame.QUIT:
                     self.quit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.quit()
                 self.scene.event(event)  # Call event with the event
             self.scene.update()
             self.scene.draw(self.screen, self.scale)
             pygame.display.update()
 
-    def set_scene(self, scene):
+    def set_scene(self, scene, flush_music = False):
+        print(f"Switching scene to {scene.__class__.__name__}")
         if hasattr(self.scene, "music") and hasattr(self.scene.music, "pause_all"):
+            print(f"scene {scene.__class__.__name__} has Music Player. Pausing All")
             self.scene.music.pause_all()
+            if flush_music:
+                self.scene.music.stop_all()
         self.scene = scene
+        self.scene.setup()
         if hasattr(self.scene, "music") and hasattr(self.scene.music, "unpause_all"):
-            self.scene.music.unpause_all()
-
+            self.scene.music.flush()
 
     def aspect_ratio_resize(self, event_width, event_height):
         delta_width = (
