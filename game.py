@@ -87,8 +87,8 @@ class Intro(Scene):
 def main():
     pygame.init()
     director = Director()
-    director.set_scene(Intro(director))
-    # director.set_scene(Game(director))
+    # director.set_scene(Intro(director))
+    director.set_scene(LevelOne(director))
     director.setup()
     director.loop()
     pygame.quit()
