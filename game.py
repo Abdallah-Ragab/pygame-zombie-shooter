@@ -1,3 +1,4 @@
+import json
 from typing import Any
 import pygame, sys
 
@@ -15,6 +16,7 @@ from UI import HUD, Avatar, HealthBar, Ammo, Money, UIElement, UIGroup, Button
 from levels import Level
 
 
+
 class LevelOne(Level):
     music = MusicPlayer(
         sound_effects={
@@ -22,6 +24,7 @@ class LevelOne(Level):
             "empty_clip": pygame.mixer.Sound("assets/sounds/empty_clip.wav"),
             "zombie_attack": pygame.mixer.Sound("assets/sounds/zombie_attack.wav"),
             "zombie_attack_2": pygame.mixer.Sound("assets/sounds/zombie_attack_2.wav"),
+            "death": pygame.mixer.Sound("assets/sounds/death.wav"),
         },
         background_effects={
             "zombie_background_effect_1": pygame.mixer.Sound(
@@ -131,40 +134,49 @@ class Intro(Scene):
         self.video.seek(
             next_key_moment, relative=False, accurate=True, seek_by_bytes=False
         )
-        # print("skipped from", current_time, ", to:", next_key_moment)
-        # print("time now:", self.video.get_playback_data()["time"])
+
 class MainMenu(Scene):
     background = pygame.image.load("assets/menus/main_menu.png")
 
     def __init__(self, director):
         Scene.__init__(self, director)
     def start_game(self):
-        self.director.set_scene(LevelOne(self.director))
+        self.director.set_scene(LevelOne(self.director), flush_music = True)
+
+    def map_menu(self):
+        self.director.set_scene(SelectMap(self.director), flush_music = True)
 
     def setup(self):
         self.menu = UIGroup(
             [
                 Button(
                     path = ["assets/menus/start.png", "assets/menus/start_hover.png"],
-                    callback = self.start_game,
-                    scale=0.5,
+                    callback = self.map_menu,
+                    scale=0.7,
                 ),
                 Button(
                     path = ["assets/menus/quit.png", "assets/menus/quit_hover.png"],
                     callback = sys.exit,
-                    scale=0.5,
+                    scale=0.7,
                 ),
             ],
             x=200,
-            y=200,
-            space_y=120,
+            y=310,
+            space_y=20,
         )
         self.menu.stack_vertical()
 
+        self.music = MusicPlayer(
+            background_music={
+                "background": pygame.mixer.Sound("assets/sounds/main_menu_background.mp3")
+            }
+        )
+        print("playing background")
+        self.music.play_background_music("background")
+
     def update(self):
         self.menu.update()
-        print("menu dim:", self.menu.width, self.menu.height)
-        print("menu pos:", self.menu.x, self.menu.y)
+
     def event(self, event):
         pass
 
@@ -176,10 +188,63 @@ class MainMenu(Scene):
             (0, 0),
         )
         self.menu.draw(screen)
+
+class SelectMap(Scene):
+    background = pygame.image.load("assets/menus/map_menu.png")
+
+    def __init__(self, director):
+        Scene.__init__(self, director)
+
+    def setup(self):
+        self.menu = UIGroup(
+            [
+                Button(
+                    path = ["assets/menus/city.png", "assets/menus/city_hover.png"],
+                    callback = lambda: self.set_map("city"),
+                    scale=0.7,
+                ),
+                Button(
+                    path = ["assets/menus/forest.png", "assets/menus/forest_hover.png"],
+                    callback = lambda: self.set_map("city"),
+                    scale=0.7,
+                ),
+            ],
+            space_x=20,
+            y=200,
+        )
+        self.menu.stack_horizontal()
+        self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
+        self.menu.stack_horizontal()
+
+        self.music = MusicPlayer(
+            background_music={
+                "background": pygame.mixer.Sound("assets/sounds/main_menu_background.mp3")
+            }
+        )
+        print("playing background")
+        self.music.play_background_music("background")
+
+    def update(self):
+        self.menu.update()
+
+    def event(self, event):
+        pass
+
+    def draw(self, screen, window_scale):
+        screen.blit(
+            pygame.transform.scale(
+                self.background, (self.director.width, self.director.height)
+            ),
+            (0, 0),
+        )
+        self.menu.draw(screen)
+    def set_map(self, map):
+        self.director.storage.set("map", map)
+        self.director.set_scene(LevelOne(self.director), flush_music = True)
+
 def main():
     pygame.init()
     director = Director()
-    # director.set_scene(Intro(director))
     director.set_scene(MainMenu(director))
     director.setup()
     director.loop()
