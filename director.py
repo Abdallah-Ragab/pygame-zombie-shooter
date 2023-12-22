@@ -38,7 +38,12 @@ class Director:
             pygame.display.update()
 
     def set_scene(self, scene):
+        if hasattr(self.scene, "music") and hasattr(self.scene.music, "pause_all"):
+            self.scene.music.pause_all()
         self.scene = scene
+        if hasattr(self.scene, "music") and hasattr(self.scene.music, "unpause_all"):
+            self.scene.music.unpause_all()
+
 
     def aspect_ratio_resize(self, event_width, event_height):
         delta_width = (
