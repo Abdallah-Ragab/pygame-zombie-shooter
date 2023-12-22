@@ -1,3 +1,4 @@
+from typing import Any
 import pygame, sys
 
 # from pygamevideo import Video
@@ -10,7 +11,7 @@ from cursor import Cursor
 from music import Player as MusicPlayer
 
 # from hud import HUD
-from UI import HUD, Avatar, HealthBar, Ammo, Money, UIElement
+from UI import HUD, Avatar, HealthBar, Ammo, Money, UIElement, UIGroup, Button
 from levels import Level
 
 
@@ -132,13 +133,54 @@ class Intro(Scene):
         )
         # print("skipped from", current_time, ", to:", next_key_moment)
         # print("time now:", self.video.get_playback_data()["time"])
+class MainMenu(Scene):
+    background = pygame.image.load("assets/menus/main_menu.png")
 
+    def __init__(self, director):
+        Scene.__init__(self, director)
+    def start_game(self):
+        self.director.set_scene(LevelOne(self.director))
 
+    def setup(self):
+        self.menu = UIGroup(
+            [
+                Button(
+                    path = ["assets/menus/start.png", "assets/menus/start_hover.png"],
+                    callback = self.start_game,
+                    scale=0.5,
+                ),
+                Button(
+                    path = ["assets/menus/quit.png", "assets/menus/quit_hover.png"],
+                    callback = sys.exit,
+                    scale=0.5,
+                ),
+            ],
+            x=200,
+            y=200,
+            space_y=120,
+        )
+        self.menu.stack_vertical()
+
+    def update(self):
+        self.menu.update()
+        print("menu dim:", self.menu.width, self.menu.height)
+        print("menu pos:", self.menu.x, self.menu.y)
+    def event(self, event):
+        pass
+
+    def draw(self, screen, window_scale):
+        screen.blit(
+            pygame.transform.scale(
+                self.background, (self.director.width, self.director.height)
+            ),
+            (0, 0),
+        )
+        self.menu.draw(screen)
 def main():
     pygame.init()
     director = Director()
     # director.set_scene(Intro(director))
-    director.set_scene(LevelOne(director))
+    director.set_scene(MainMenu(director))
     director.setup()
     director.loop()
     pygame.quit()
