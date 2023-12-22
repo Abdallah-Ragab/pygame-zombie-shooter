@@ -192,15 +192,17 @@ class Player(Character):
     def enemies_colliding_cursor(self):
         enemies = []
         cursor = self.scene.cursor
-        enemy_group = self.scene.EnemyGroup
+        enemy_group = self.scene.EnemyGroup.sprites()
         for enemy in enemy_group:
-            if enemy.rect.colliderect(cursor.rect):
+            print("enemy:", enemy.rect, "cursor:", cursor.rect)
+            # if cursor.collide(enemy.rect):
+            if self.scene.camera.apply(enemy.rect).colliderect(cursor.rect):
                 enemies.append(enemy)
         return enemies
 
     def enemies_colliding_player(self):
         enemies = []
-        enemy_group = self.scene.EnemyGroup
+        enemy_group = self.scene.EnemyGroup.sprites()
         for enemy in enemy_group:
             if enemy.rect.colliderect(self.rect):
                 enemies.append(enemy)
