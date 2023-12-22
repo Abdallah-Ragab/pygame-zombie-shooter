@@ -35,6 +35,10 @@ class Animation:
 
         self.index += self.speed
 
+        try:
+            end = int(self.files[-1].split(".")[0])
+        except ValueError:
+            end = self.end
 
         if self.index >= self.end:
             self.iterations += 1
