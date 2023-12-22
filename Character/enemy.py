@@ -49,6 +49,11 @@ class Enemy(Character):
         if self.animation.active_animation.name == "die" and self.animation.active_animation.FINISHED_FLAG:
             self.DEAD = True
             self.scene.EnemyManager.kill_enemy(self)
+
+        animation = self.animation.active_animation if isinstance(self.animation.active_animation, Animation) else self.animation.active_animation.active_animation
+        if not self.animation.active_animation.name == "walk":
+            self.moving = False
+
         super().update()
 
     def sense_player(self, player):
@@ -178,7 +183,4 @@ class EnemyManager:
                     self.despawn_enemy(enemy)
 
     def all_dead(self):
-        print(
-            "Total enemies: ", len(self.enemies), "Dead enemies: ", len([enemy for enemy in self.enemies if enemy.DEAD])
-        )
         return all([enemy.DEAD for enemy in self.enemies])
