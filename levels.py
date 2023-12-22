@@ -4,9 +4,11 @@ from UI import HUD
 from camera import Camera
 from director import Scene
 from cursor import Cursor
+from music import Player as MusicPlayer
 
 
 class Level(Scene):
+    music = MusicPlayer()
     def __init__(
         self,
         director,
@@ -49,6 +51,7 @@ class Level(Scene):
         )
 
     def update(self):
+        self.music.update()
         self.PlayerGroup.update()
         self.EnemyGroup.update()
         self.EnemyManager.update()
