@@ -64,3 +64,6 @@ class Character(pygame.sprite.Sprite):
 
     def event(self, event):
         pass
+
+    def get_hit(self, damage):
+        self.health -= damage
