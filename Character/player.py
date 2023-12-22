@@ -151,6 +151,7 @@ class Player(Character):
             self.DEAD = True
 
     def get_hit(self, damage):
+        print("Player got hit")
         animation = random.choice(["hit 1", "hit 2"])
         self.animation.set_animation(animation, loop=False)
         self.moving = False
