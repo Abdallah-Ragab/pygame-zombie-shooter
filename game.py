@@ -49,6 +49,7 @@ class LevelOne(Level):
     )
 
     def setup(self):
+        self.map = self.director.storage.get("map", "city")
         self.music.loop_background_effect(["zombie_background_effect_1", "zombie_background_effect_2", "zombie_background_effect_3", "empty_background_effect"])
         self.music.play_background_music("background_music_1", loop=True)
         return super().setup()
@@ -205,7 +206,7 @@ class SelectMap(Scene):
                 ),
                 Button(
                     path = ["assets/menus/forest.png", "assets/menus/forest_hover.png"],
-                    callback = lambda: self.set_map("city"),
+                    callback = lambda: self.set_map("forest"),
                     scale=0.7,
                 ),
             ],
