@@ -6,6 +6,7 @@ from .character import Character
 class Enemy(Character):
     sense_range = 700
     DEAD = False
+    melee_damage = 10
 
     def __init__(
         self,
@@ -21,13 +22,11 @@ class Enemy(Character):
         self.name = name
         self.animation = AnimationController(
             animations=[
-                Animation("idle", f"D:\\game assets\\{self.name}\\idle", speed=1.5),
-                Animation("walk", f"D:\\game assets\\{self.name}\\walk", speed=1.5),
-                Animation(
-                    "idle_to_walk",
-                    f"D:\\game assets\\{self.name}\\idle to walk",
-                    speed=1.5,
-                ),
+                Animation("idle", f"D:\\game assets\\{self.name}\\idle", speed=0.5),
+                Animation("walk", f"D:\\game assets\\{self.name}\\walk", speed=0.5),
+                Animation("die", f"D:\\game assets\\{self.name}\\die", speed=0.5),
+                Animation("hit", f"D:\\game assets\\{self.name}\\hit", speed=0.5),
+                Animation("idle_to_walk", f"D:\\game assets\\{self.name}\\idle to walk", speed=0.5),
                 SequenceAnimation(
                     name="scream_run",
                     animations=[
@@ -35,7 +34,8 @@ class Enemy(Character):
                         Animation("run", f"D:\\game assets\\{self.name}\\run"),
                     ],
                 ),
-                Animation("attack", f"D:\\game assets\\{self.name}\\attack", speed=1.5),
+                Animation("attack 1", f"D:\\game assets\\{self.name}\\attack 1", speed=0.5),
+                Animation("attack 2", f"D:\\game assets\\{self.name}\\attack 2", speed=0.5),
             ],
             default="idle",
             transitions=[
@@ -46,6 +46,9 @@ class Enemy(Character):
 
     def update(self):
         self.chase_player(self.scene.Player)
+        if self.animation.active_animation.name == "die" and self.animation.active_animation.FINISHED_FLAG:
+            self.DEAD = True
+            self.scene.EnemyManager.kill_enemy(self)
         super().update()
 
     def sense_player(self, player):
@@ -56,6 +59,7 @@ class Enemy(Character):
         return x, y, within_range
 
     def chase_player(self, player):
+        # return
         x, y, within_range = self.sense_player(player)
         if within_range:
             if self.collide_player(player):
@@ -63,10 +67,6 @@ class Enemy(Character):
             else:
                 self.direction = -1 if x > 0 else 1
                 self.moving = True
-                # if self.direction == -1:
-                #     self.animation.set_animation("turn_walk")
-                # else:
-                #     self.animation.set_animation("walk")
                 self.animation.set_animation("walk")
                 self.x_speed = self.speed[0]
                 self.x_speed = -self.speed[0] if x > 0 else self.speed[0]
@@ -81,12 +81,36 @@ class Enemy(Character):
         return abs(self.rect.centerx - player.rect.centerx) < 100 and abs(self.rect.centery - player.rect.centery) < 100
 
     def attack_player(self, player):
-        if player.health <= 0:
+        if player.health <= 0 or self.health <= 0 or self.animation.active_animation.name == "hit":
             return
         self.moving = False
-        self.animation.set_animation("attack", loop=False)
+        attacks = ["attack 1", "attack 2"]
+        if self.animation.active_animation.name in attacks:
+            return  # already attacking
+        attack = random.choice(attacks)
+        print("enemy started attcking")
+        self.animation.set_animation(attack, loop=False)
         if self.animation.active_animation.FINISHED_FLAG:
-            player.get_hit(10)
+            print("enemy finished attcking")
+            player.get_hit(self.melee_damage)
+            self.animation.set_animation("idle")
+
+    def die(self):
+        self.moving = False
+        self.animation.set_animation("die", loop=False)
+        self.animation.LOCKED = True
+        print("enemy started dying")
+        print(f'Animation: {self.animation.active_animation.name}')
+        print(f'Finished flag: {self.animation.active_animation.FINISHED_FLAG}')
+
+    def get_hit(self, damage):
+        self.health -= damage
+        print("enemy health: ", self.health)
+        if self.health <= 0:
+            self.die()
+        self.animation.set_animation("hit", loop=False)
+        if self.animation.active_animation.FINISHED_FLAG:
+            print("enemy finished getting hit")
             self.animation.set_animation("idle")
 
 class EnemyManager:
@@ -107,6 +131,7 @@ class EnemyManager:
         print("spawned enemy: ", enemy.name)
 
     def kill_enemy(self, enemy):
+        print("killing enemy: ", enemy.name)
         self.despawn_enemy(enemy)
         enemy.DEAD = True
 
@@ -120,7 +145,7 @@ class EnemyManager:
         enemy_rate = level_width // self.max_enemies
         # render enemies only when the camera edge is near
 
-        enemy_height = 300
+        enemy_height = 250
         for i in range(self.max_enemies):
             name = random.choice(self.enemy_types)
             x = (
@@ -143,9 +168,10 @@ class EnemyManager:
 
     def render_enemies(self):
         for enemy in self.enemies:
-            camera = self.scene.camera
-            camera.rect.x = abs(camera.rect.x)
-            if camera.rect.colliderect(enemy.rect):
-                self.spawn_enemy(enemy)
-            else:
-                self.despawn_enemy(enemy)
+            if not enemy.DEAD:
+                camera = self.scene.camera
+                camera.rect.x = abs(camera.rect.x)
+                if camera.rect.colliderect(enemy.rect) and not enemy.DEAD:
+                    self.spawn_enemy(enemy)
+                else:
+                    self.despawn_enemy(enemy)
