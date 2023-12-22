@@ -53,8 +53,10 @@ class Player:
     def play_background_music(
         self, music_name: str | list, loop: bool = True, volume: float = 1.0
     ):
+        print("playing background music:", music_name)
         parallel_music = [music_name] if isinstance(music_name, str) else music_name
-        parallel_music = parallel_music[self.background_music_channel_count :]
+        # parallel_music = parallel_music[self.background_music_channel_count :]
+        print("parallel_music", parallel_music)
         for music in parallel_music:
             self._play_background_music(music, loop, volume)
 
@@ -85,11 +87,17 @@ class Player:
     def play_sound_effect(self, sound_effect_name: str, volume: float = 1.0):
         if sound_effect_name not in self.sound_effects:
             raise ValueError(f"{sound_effect_name} not found in sound effects")
+        channel = pygame.mixer.find_channel()
+        if channel:
+            channel.play(self.sound_effects[sound_effect_name])
 
-        pygame.mixer.find_channel().play(self.sound_effects[sound_effect_name])
-
-    def stop_all_sounds(self):
+    def stop_all(self):
         pygame.mixer.stop()
+    def pause_all(self):
+        pygame.mixer.pause()
+    def unpause_all(self):
+        pygame.mixer.unpause()
+
 
     def stop_background_music(self):
         for channel in self.background_music_channels:
@@ -116,16 +124,17 @@ class Player:
     def _play_background_music(self, music_name: str, loop: bool, volume: float):
         if music_name not in self.background_music:
             raise ValueError(f"{music_name} not found in background music")
-
+        print("playing background music")
         for channel in self.background_music_channels:
             if not channel.get_busy():
                 channel.play(
                     self.background_music[music_name],
-                    loop=loop,
+                    loops=-1 if loop else 0,
                     fade_ms=self.fadein_time,
                 )
+                print("Found free channel")
                 return
-
+        print("No free channel found")
         self.background_music_channels[0].play(
             self.background_music[music_name], loop=loop, fade_ms=self.fadein_time
         )
