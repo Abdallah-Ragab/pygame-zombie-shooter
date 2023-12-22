@@ -171,6 +171,7 @@ class Player(Character):
 
     def die(self):
         self.animation.set_animation("die", loop=False)
+        self.scene.music.play_sound_effect("death")
         self.moving = False
         self.x_speed, self.y_speed = 0, 0
         if self.animation.active_animation.FINISHED_FLAG:
