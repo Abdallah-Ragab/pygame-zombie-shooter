@@ -11,7 +11,7 @@ class Level(Scene):
         self,
         director,
     ):
-        self.name = "forest"
+        self.name = "city"
         Scene.__init__(self, director)
 
     def setup(self):
@@ -34,10 +34,10 @@ class Level(Scene):
         self.EnemyGroup = CameraAwareGroup()
         self.EnemyGroup.set_camera(self.camera)
 
-        self.EnemyManager = EnemyManager(self, ['zombie'] , max_enemies=5)
+        self.EnemyManager = EnemyManager(self, ['zombie girl', 'zombie cop'] , max_enemies=5)
 
         self.cursor = Cursor(
-            self.Player, min_distance=self.Player.width // 2, max_angle=20, DEBUG=False
+            self.Player, min_distance=self.Player.width // 2, max_angle=30, DEBUG=False
         )
         self.hud = HUD(
             self.Player,
