@@ -54,7 +54,7 @@ class Player:
         self, music_name: str | list, loop: bool = True, volume: float = 1.0
     ):
         parallel_music = [music_name] if isinstance(music_name, str) else music_name
-        parallel_music = parallel_music[self.background_music_channels_count :]
+        parallel_music = parallel_music[self.background_music_channel_count :]
         for music in parallel_music:
             self._play_background_music(music, loop, volume)
 
@@ -62,7 +62,7 @@ class Player:
         self, music_name: str | list, loop: bool = False, volume: float = 1.0
     ):
         parallel_music = [music_name] if isinstance(music_name, str) else music_name
-        parallel_music = parallel_music[self.background_music_channels_count :]
+        parallel_music = parallel_music[self.background_music_channel_count :]
         for music in parallel_music:
             self._enqueue_background_music(music, loop, volume)
 
