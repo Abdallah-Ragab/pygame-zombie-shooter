@@ -59,7 +59,8 @@ class Enemy(Character):
         return x, y, within_range
 
     def chase_player(self, player):
-        # return
+        if self.animation.active_animation.name in ["die", "hit"]:
+            return
         x, y, within_range = self.sense_player(player)
         if within_range:
             if self.collide_player(player):
@@ -150,10 +151,10 @@ class EnemyManager:
             name = random.choice(self.enemy_types)
             x = (
                 enemy_rate * i
-                + random.randint(-enemy_rate, enemy_rate)
+                + random.randint(-enemy_rate/2, enemy_rate/2)
             )
             x = min(x, level_width - enemy_rate)
-            x = max(x, 0)
+            x = max(x, self.scene.director.width)
 
             # turn x from scene coordinates to camera coordinates
             x = x - self.scene.camera.rect.x
