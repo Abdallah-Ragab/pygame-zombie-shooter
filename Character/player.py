@@ -34,6 +34,8 @@ class Player(Character):
     )
     max_bullets = 32
     bullets = max_bullets
+    ranged_damage = 10
+    melee_damage = 5
 
     def update(self):
         active_animation = self.animation.active_animation
@@ -120,10 +122,14 @@ class Player(Character):
         animations = ["elbow", "kick"]
         random_animation = random.choice(animations)
         self.animation.set_animation(random_animation, loop=False)
+        for enemy in self.enemies_colliding_player():
+            enemy.get_hit(self.melee_damage)
 
     def shoot(self):
         self.animation.set_animation("fire", loop=False)
         self.bullets -= 1 if self.bullets > 0 else 0
+        for enemy in self.enemies_colliding_cursor():
+            enemy.get_hit(self.ranged_damage)
 
     def handle_keyup(self, event):
         if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
@@ -179,3 +185,20 @@ class Player(Character):
         left_condition = self.rect.left >= self.scene.background.get_rect().left
         print("within_left_limit:", left_condition)  # Add this line
         return left_condition
+
+    def enemies_colliding_cursor(self):
+        enemies = []
+        cursor = self.scene.cursor
+        enemy_group = self.scene.EnemyGroup
+        for enemy in enemy_group:
+            if enemy.rect.colliderect(cursor.rect):
+                enemies.append(enemy)
+        return enemies
+
+    def enemies_colliding_player(self):
+        enemies = []
+        enemy_group = self.scene.EnemyGroup
+        for enemy in enemy_group:
+            if enemy.rect.colliderect(self.rect):
+                enemies.append(enemy)
+        return enemies
