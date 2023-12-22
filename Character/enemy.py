@@ -96,10 +96,7 @@ class Enemy(Character):
         attack = random.choice(attacks)
         print("enemy started attcking")
         self.animation.set_animation(attack, loop=False)
-        if self.animation.active_animation.FINISHED_FLAG:
-            print("enemy finished attcking")
-            player.get_hit(self.melee_damage)
-            self.animation.set_animation("idle")
+        player.get_hit(self.melee_damage)
 
     def die(self):
         self.moving = False
