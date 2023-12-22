@@ -32,6 +32,8 @@ class Player(Character):
             TransitionRule("idle", "walk", "idle_to_walk", True),
         ],
     )
+    melee_animations = ["elbow", "kick"]
+
     max_bullets = 32
     bullets = max_bullets
     ranged_damage = 10
@@ -51,6 +53,8 @@ class Player(Character):
 
         if self.health <= 0:
             self.die()
+
+        # FIXME: it only check at first key down, not when key is held down
 
         return super().update()
 
@@ -76,8 +80,20 @@ class Player(Character):
         elif event.key == pygame.K_DOWN:
             self.walk_down()
 
+    def hold_event(self):
+        pressed = pygame.key.get_pressed()
+        if pressed[pygame.K_RIGHT]:
+            self.walk_right()
+        elif pressed[pygame.K_LEFT]:
+            self.walk_left()
+        elif pressed[pygame.K_UP]:
+            self.walk_up()
+        elif pressed[pygame.K_DOWN]:
+            self.walk_down()
+
     def walk_right(self):
         if not self.within_right_limit():
+            self.moving = False
             return
         self.moving = True
         if self.direction == -1:
@@ -88,6 +104,7 @@ class Player(Character):
 
     def walk_left(self):
         if not self.within_left_limit():
+            self.moving = False
             return
         self.moving = True
         if self.direction == 1:
@@ -98,6 +115,7 @@ class Player(Character):
 
     def walk_up(self):
         if not self.within_top_limit():
+            self.moving = False
             return
         self.moving = True
         self.animation.set_animation("walk")
@@ -105,6 +123,7 @@ class Player(Character):
 
     def walk_down(self):
         if not self.within_bottom_limit():
+            self.moving = False
             return
         self.moving = True
         self.animation.set_animation("walk")
@@ -115,18 +134,25 @@ class Player(Character):
         if event.button == 1:
             if self.bullets > 0:
                 self.shoot()
+            else:
+                self.scene.music.play_sound_effect("empty_clip")
         elif event.button == 3:
             self.melee()
 
     def melee(self):
-        animations = ["elbow", "kick"]
-        random_animation = random.choice(animations)
+        random_animation = random.choice(self.melee_animations)
+        active_animation = self.animation.active_animation
+        if hasattr(active_animation, "active_animation"):
+            active_animation = active_animation.active_animation
+        if active_animation is not None and active_animation.name in self.melee_animations:
+            return
         self.animation.set_animation(random_animation, loop=False)
         for enemy in self.enemies_colliding_player():
             enemy.get_hit(self.melee_damage)
 
     def shoot(self):
         self.animation.set_animation("fire", loop=False)
+        self.scene.music.play_sound_effect("shot")
         self.bullets -= 1 if self.bullets > 0 else 0
         enemies = self.enemies_colliding_cursor()
         if len(enemies) > 0:
@@ -166,7 +192,6 @@ class Player(Character):
             if self.moving:
                 self.animation.set_animation("walk")
 
-    # FIXME: it only check at first key down, not when key is held down
     def within_top_limit(self):
         feet_y = self.rect.bottom - self.height * 0.10
         top_condition = feet_y >= 500
@@ -189,6 +214,28 @@ class Player(Character):
         left_condition = self.rect.left >= self.scene.background.get_rect().left
         print("within_left_limit:", left_condition)  # Add this line
         return left_condition
+
+    def check_limits(self):
+
+        if not self.x_speed == 0:
+            if self.x_speed > 0:
+                if self.within_right_limit():
+                    return
+            else:
+                if self.within_left_limit():
+                    return
+
+        if not self.y_speed == 0:
+            if self.y_speed > 0:
+                if self.within_bottom_limit():
+                    return
+            else:
+                if self.within_top_limit():
+                    return
+
+
+        self.moving = False
+        self.animation.set_animation("idle")
 
     def enemies_colliding_cursor(self):
         enemies = []
