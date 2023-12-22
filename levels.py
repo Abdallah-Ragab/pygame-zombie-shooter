@@ -8,7 +8,6 @@ from music import Player as MusicPlayer
 
 
 class Level(Scene):
-    map = "city"
     music = MusicPlayer()
     def __init__(
         self,
