@@ -103,9 +103,7 @@ class Enemy(Character):
         self.moving = False
         self.animation.set_animation("die", loop=False)
         self.animation.LOCKED = True
-        print("enemy started dying")
-        print(f'Animation: {self.animation.active_animation.name}')
-        print(f'Finished flag: {self.animation.active_animation.FINISHED_FLAG}')
+        self.scene.reward_player()
 
     def get_hit(self, damage):
         self.health -= damage
