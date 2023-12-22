@@ -55,6 +55,7 @@ class Level(Scene):
         self.camera.update(self.Player)
         self.cursor.update()
         self.hud.update()
+        self.check_win_condition()
 
     def draw(self, screen, window_scale):
         screen.blit(self.background, self.camera.apply(self.background))
@@ -66,3 +67,78 @@ class Level(Scene):
     def event(self, event):
         self.PlayerGroup.sprite.event(event)
         self.EnemyGroup.event(event)
+
+    def check_win_condition(self):
+        if self.Player.DEAD:
+            self.director.set_scene(GameOver(self.director))
+        elif self.EnemyManager.all_dead():
+            self.director.set_scene(Win(self.director))
+
+
+class GameOver(Scene):
+    def __init__(self, director):
+        Scene.__init__(self, director)
+        self.game_over_text = pygame.font.SysFont("Arial", 50).render(
+            "Game Over", True, (255, 255, 255)
+        )
+        window_center = (self.director.width / 2, self.director.height / 2)
+
+    def update(self):
+        self.hud.update()
+
+    def event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+            self.director.set_scene(Game(self.director))
+
+    def draw(self, screen, window_scale):
+        background = pygame.Rect(
+            (0, 0),
+            (self.director.width * window_scale, self.director.height * window_scale),
+        )
+        pygame.draw.rect(screen, (0, 0, 255), background)
+        # show the pause text at the center of the screen
+        screen.blit(
+            self.game_over_text,
+            (
+                self.director.width / 2 - self.game_over_text.get_width() / 2,
+                self.director.height / 2 - self.game_over_text.get_height() / 2,
+            ),
+        )
+        self.game_over_text.get_rect().center = (
+            self.director.width / 2,
+            self.director.height / 2,
+        )
+
+class Win(Scene):
+    def __init__(self, director):
+        Scene.__init__(self, director)
+        self.win_text = pygame.font.SysFont("Arial", 50).render(
+            "You Win!", True, (255, 255, 255)
+        )
+        window_center = (self.director.width / 2, self.director.height / 2)
+
+    def update(self):
+        self.hud.update()
+
+    def event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+            self.director.set_scene(Game(self.director))
+
+    def draw(self, screen, window_scale):
+        background = pygame.Rect(
+            (0, 0),
+            (self.director.width * window_scale, self.director.height * window_scale),
+        )
+        pygame.draw.rect(screen, (0, 0, 255), background)
+        # show the pause text at the center of the screen
+        screen.blit(
+            self.win_text,
+            (
+                self.director.width / 2 - self.win_text.get_width() / 2,
+                self.director.height / 2 - self.win_text.get_height() / 2,
+            ),
+        )
+        self.win_text.get_rect().center = (
+            self.director.width / 2,
+            self.director.height / 2,
+        )
