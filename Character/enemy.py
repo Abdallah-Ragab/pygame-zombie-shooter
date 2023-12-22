@@ -17,7 +17,7 @@ class Enemy(Character):
         height=None,
         width=None,
         speed: tuple = (2, 1),
-        direction: int = 1,
+        direction: int = -1,
     ):
         self.name = name
         self.animation = AnimationController(

@@ -78,13 +78,16 @@ class Level(Scene):
 class GameOver(Scene):
     def __init__(self, director):
         Scene.__init__(self, director)
+
+    def setup(self):
         self.game_over_text = pygame.font.SysFont("Arial", 50).render(
             "Game Over", True, (255, 255, 255)
         )
         window_center = (self.director.width / 2, self.director.height / 2)
 
+
     def update(self):
-        self.hud.update()
+        pass
 
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
@@ -112,13 +115,15 @@ class GameOver(Scene):
 class Win(Scene):
     def __init__(self, director):
         Scene.__init__(self, director)
+
+    def setup(self):
         self.win_text = pygame.font.SysFont("Arial", 50).render(
             "You Win!", True, (255, 255, 255)
         )
         window_center = (self.director.width / 2, self.director.height / 2)
 
     def update(self):
-        self.hud.update()
+        pass
 
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
