@@ -3,6 +3,8 @@ from .sequence_animation import SequenceAnimation
 
 
 class AnimationController:
+    LOCKED = False
+
     def __init__(self, animations, default, transitions=[]):
         self.animations = animations
         self.animation_dict = self.get_animation_dict()
@@ -83,6 +85,8 @@ class AnimationController:
         return transition_animation
 
     def set_animation(self, name, ignore_transition=False, force=False, loop=True):
+        if self.LOCKED:
+            return
         if not name in self.animation_dict:
             raise KeyError(f"Animation {name} not found")
 
