@@ -128,8 +128,11 @@ class Player(Character):
     def shoot(self):
         self.animation.set_animation("fire", loop=False)
         self.bullets -= 1 if self.bullets > 0 else 0
-        for enemy in self.enemies_colliding_cursor():
-            enemy.get_hit(self.ranged_damage)
+        enemies = self.enemies_colliding_cursor()
+        if len(enemies) > 0:
+            print("enemies hit:", len(enemies))
+            for enemy in enemies:
+                enemy.get_hit(self.ranged_damage)
 
     def handle_keyup(self, event):
         if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN):
