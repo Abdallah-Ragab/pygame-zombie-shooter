@@ -96,6 +96,7 @@ class Enemy(Character):
         attack = random.choice(attacks)
         print("enemy started attcking")
         self.animation.set_animation(attack, loop=False)
+        self.scene.music.play_sound_effect(random.choice(["zombie_attack", "zombie_attack_2"]))
         player.get_hit(self.melee_damage)
 
     def die(self):
