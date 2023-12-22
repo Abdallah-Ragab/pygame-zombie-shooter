@@ -98,6 +98,9 @@ class Player:
     def unpause_all(self):
         pygame.mixer.unpause()
 
+    def flush(self):
+        self.stop_all()
+
 
     def stop_background_music(self):
         for channel in self.background_music_channels:
@@ -129,14 +132,14 @@ class Player:
             if not channel.get_busy():
                 channel.play(
                     self.background_music[music_name],
-                    loops=-1 if loop else 0,
+                    loops=0,
                     fade_ms=self.fadein_time,
                 )
                 print("Found free channel")
                 return
         print("No free channel found")
         self.background_music_channels[0].play(
-            self.background_music[music_name], loop=loop, fade_ms=self.fadein_time
+            self.background_music[music_name], loops=-1 if loop else 0, fade_ms=self.fadein_time
         )
 
     def _enqueue_background_music(self, music_name: str, loop: bool, volume: float):
