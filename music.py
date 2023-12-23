@@ -14,9 +14,9 @@ class Player:
 
     def __init__(
         self,
-        background_music: dict = None,
-        sound_effects: dict = None,
-        background_effects: dict = None,
+        background_music: dict = [],
+        sound_effects: dict = [],
+        background_effects: dict = [],
     ):
         pygame.mixer.init()
 
@@ -99,7 +99,9 @@ class Player:
         pygame.mixer.unpause()
 
     def flush(self):
-        self.stop_all()
+        # self.stop_all()
+        # pygame.mixer.set_reserved(0)
+        pygame.mixer.quit()
 
 
     def stop_background_music(self):
