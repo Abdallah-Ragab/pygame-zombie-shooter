@@ -27,11 +27,13 @@ class MenuScene(Scene):
     )
 
     def __init__(self, director):
-        Scene.__init__(self, director)
-        self.music.loop_background_music("background", loop=True)
+        super().__init__(director)
+        self.music.play_background_music("background", loop=True)
+
 
     def update(self):
         self.menu.update()
+        self.music.update()
 
     def event(self, event):
         self.menu.event(event)
@@ -115,7 +117,7 @@ class GamePlay(Level):
 
 class Pause(Scene):
     def __init__(self, director):
-        Scene.__init__(self, director)
+        super().__init__(director)
         self.pause_text = pygame.font.SysFont("Arial", 50).render(
             "Pause", True, (255, 255, 255)
         )
@@ -150,7 +152,7 @@ class Pause(Scene):
 
 class Intro(Scene):
     def __init__(self, director):
-        Scene.__init__(self, director)
+        super().__init__(director)
 
     def setup(self):
         self.video = Video("assets/intro.mp4")
@@ -187,7 +189,7 @@ class MainMenu(MenuScene):
     background = pygame.image.load("assets/menus/main_menu.png")
 
     def __init__(self, director):
-        Scene.__init__(self, director)
+        super().__init__(director)
 
     def setup(self):
         self.menu = UIGroup(
@@ -217,7 +219,7 @@ class SelectMap(MenuScene):
     background = pygame.image.load("assets/menus/map_menu.png")
 
     def __init__(self, director):
-        Scene.__init__(self, director)
+        super().__init__(director)
 
     def setup(self):
         self.menu = UIGroup(
@@ -249,7 +251,7 @@ class SelectLevel(MenuScene):
     background = pygame.image.load("assets/menus/level_menu.png")
 
     def __init__(self, director):
-        Scene.__init__(self, director)
+        super().__init__(director)
 
     def setup(self):
         self.menu = UIGroup(
@@ -286,7 +288,7 @@ class PerkMenu(MenuScene):
     background = pygame.image.load("assets/menus/perks_menu.png")
 
     def __init__(self, director):
-        Scene.__init__(self, director)
+        super().__init__(director)
 
     def setup(self):
         self.menu = UIGroup(

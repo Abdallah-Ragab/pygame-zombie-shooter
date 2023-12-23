@@ -53,10 +53,7 @@ class Player:
     def play_background_music(
         self, music_name: str | list, loop: bool = True, volume: float = 1.0
     ):
-        print("playing background music:", music_name)
         parallel_music = [music_name] if isinstance(music_name, str) else music_name
-        # parallel_music = parallel_music[self.background_music_channel_count :]
-        print("parallel_music", parallel_music)
         for music in parallel_music:
             self._play_background_music(music, loop, volume)
 
@@ -129,7 +126,7 @@ class Player:
     def _play_background_music(self, music_name: str, loop: bool, volume: float):
         if music_name not in self.background_music:
             raise ValueError(f"{music_name} not found in background music")
-        print("playing background music")
+        # print("playing background music")
         for channel in self.background_music_channels:
             if not channel.get_busy():
                 channel.play(
@@ -137,9 +134,9 @@ class Player:
                     loops=0,
                     fade_ms=self.fadein_time,
                 )
-                print("Found free channel")
+                # print("Found free channel")
                 return
-        print("No free channel found")
+        # print("No free channel found")
         self.background_music_channels[0].play(
             self.background_music[music_name], loops=-1 if loop else 0, fade_ms=self.fadein_time
         )
