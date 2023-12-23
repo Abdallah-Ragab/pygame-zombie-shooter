@@ -288,7 +288,9 @@ class Intro(Scene):
         Check if the video is active. If it is not active, call the `finish()` method.
         @return None
         """
-        if self.video.active == False:
+        # if self.video.active == False:
+        current_time = self.video.get_playback_data()["time"]
+        if current_time > 22:
             self.finish()
 
     def event(self, event):
