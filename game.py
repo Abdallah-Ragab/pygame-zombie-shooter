@@ -334,24 +334,20 @@ class PerkMenu(MenuScene):
                             scale=0.7,
                         ),
                     ],
-                    space_x=20,
-                    x=800,
-                    y=500,
+                    space_y=5,
+                    x=970,
+                    y=530,
                 ),
             ],
             space_x=20,
-            y=200,
+            y=100,
+            x=410,
         )
 
         perks = self.menu.elements[:3]
         buttons = self.menu.elements[3]
 
         self.menu.stack_horizontal(perks)
-        # self.menu.stack_vertical(buttons)
-        # self.menu.stack_vertical(buttons)
-        # self.menu.stack_vertical(buttons)
-        # self.menu.stack_horizontal(perks)
-        self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
         buttons.stack_vertical()
 
     def buy_perk(self, perk):
@@ -373,11 +369,13 @@ class PerkMenu(MenuScene):
 def main():
     pygame.init()
     director = Director()
-    director.set_scene(Pause(director))
+    director.set_scene(Intro(director))
     director.setup()
     director.loop()
     pygame.quit()
     sys.exit()
+
+
 
 
 if __name__ == "__main__":
