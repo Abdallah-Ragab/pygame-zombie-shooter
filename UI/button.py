@@ -36,31 +36,31 @@ class Button(UIElement):
                 return True
         return False
 
-    @property
-    def is_clicked(self):
-        if self.is_hovered:
-            if pygame.mouse.get_pressed()[0]:
-                return True
-        return False
-
     def update(self):
         super().update()
-        if self.is_clicked and self.callback:
-            self.callback()
         if self.is_hovered and self.hover_image:
-            self.swith_image(self.hover_image)
-        else:
-            self.swith_image(self.normal_image)
+            self.switch_image(self.hover_image)
+        elif self.normal_image:
+            self.switch_image(self.normal_image)
 
-    def swith_image(self, image):
+    def switch_image(self, image):
         self.image = image
         self.width = self.image.get_width()
         self.height = self.image.get_height()
+
+    def event(self, event):
+        print("EVENT got called")
+        if event.type == pygame.MOUSEBUTTONUP:
+            if self.is_hovered and self.callback:
+                self.callback()
 
 
     def apply_scale(self):
         self.width = int(self.width * self.scale)
         self.height = int(self.height * self.scale)
-
-        self.normal_image = pygame.transform.scale(self.normal_image, (self.width, self.height))
-        self.hover_image = pygame.transform.scale(self.hover_image, (self.width, self.height))
+        if self.image:
+            self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        if self.normal_image:
+            self.normal_image = pygame.transform.scale(self.normal_image, (self.width, self.height))
+        if self.hover_image:
+            self.hover_image = pygame.transform.scale(self.hover_image, (self.width, self.height))
