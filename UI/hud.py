@@ -65,6 +65,9 @@ class HUD(UIGroup):
     def draw(self, screen):
         super().draw(screen)
 
+    def event(self, event):
+        super().event(event)
+
     def position(self):
         super().position()
 
