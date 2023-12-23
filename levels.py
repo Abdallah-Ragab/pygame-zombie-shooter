@@ -68,8 +68,8 @@ class Level(Scene):
 
     def event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            from game import MainMenu
-            self.director.set_scene(MainMenu(self.director))
+            from game import Pause
+            self.director.set_scene(Pause(self.director))
 
         self.PlayerGroup.sprite.event(event)
         self.EnemyGroup.event(event)
