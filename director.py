@@ -5,7 +5,29 @@ from storage import JsonStorage
 
 
 class Director:
+    """
+    The Director class manages the game loop and controls the flow of the game.
+
+    Attributes:
+        width (int): The width of the game window.
+        height (int): The height of the game window.
+        screen (pygame.Surface): The game window surface.
+        aspect_ratio (Fraction): The aspect ratio of the game window.
+        scale (float): The scaling factor for the game window.
+        title (str): The title of the game window.
+        scene (Scene): The current scene being displayed.
+        quit_flag (bool): Flag indicating whether the game should quit.
+        clock (pygame.time.Clock): The game clock for controlling the frame rate.
+
+    Methods:
+        setup(): Sets up the game window with the specified title.
+        loop(): The main game loop that handles events, updates, and rendering.
+        set_scene(scene, pause_music=True, flush_music=False): Sets the current scene.
+        aspect_ratio_resize(event_width, event_height): Resizes the game window while maintaining the aspect ratio.
+        quit(): Sets the quit flag to True, ending the game loop.
+    """
     storage = JsonStorage
+
     def __init__(self):
         self.width = 1280
         self.height = 720
@@ -21,9 +43,15 @@ class Director:
         self.clock = pygame.time.Clock()
 
     def setup(self):
+        """
+        Sets up the game window with the specified title.
+        """
         pygame.display.set_caption(self.title)
 
     def loop(self):
+        """
+        The main game loop that handles events, updates, and rendering.
+        """
         while not self.quit_flag:
             self.clock.tick(60)
             for event in pygame.event.get():
@@ -36,15 +64,28 @@ class Director:
             self.scene.draw(self.screen, self.scale)
             pygame.display.update()
 
-    def set_scene(self, scene, pause_music = True, flush_music = False):
-        from levels import Level
+    def set_scene(self, scene, pause_music=True, flush_music=False):
+        """
+        Sets the current scene.
+
+        Args:
+            scene (Scene): The scene to set as the current scene.
+            pause_music (bool, optional): Flag indicating whether to pause the music. Defaults to True.
+            flush_music (bool, optional): Flag indicating whether to flush the music. Defaults to False.
+        """
+        from Scene.Level import Level
         if isinstance(self.scene, Level) or issubclass(self.scene.__class__, Level):
             self._game = self.scene
         self.scene = scene
 
-
-
     def aspect_ratio_resize(self, event_width, event_height):
+        """
+        Resizes the game window while maintaining the aspect ratio.
+
+        Args:
+            event_width (int): The new width of the game window.
+            event_height (int): The new height of the game window.
+        """
         delta_width = (
             event_width - self.screen.get_width()
         ) / self.aspect_ratio.numerator
@@ -60,39 +101,9 @@ class Director:
         self.screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
     def quit(self):
+        """
+        Sets the quit flag to True, ending the game loop.
+        """
         self.quit_flag = True
 
 
-class Scene:
-    def __init__(self, director):
-        self.director = director
-        self.setup()
-
-    def scale(self):
-        scale = self.director.scale
-        for surface in self.surfaces:
-            surface = pygame.transform.scale(
-                surface,
-                (int(surface.get_width() * scale), int(surface.get_height() * scale)),
-            )
-        for rect in self.rects:
-            rect = pygame.Rect(
-                (rect.x * scale, rect.y * scale),
-                (rect.width * scale, rect.height * scale),
-            )
-        for font in self.fonts:
-            font = pygame.font.Font(font.font, int(font.size * scale))
-        for text in self.texts:
-            text = font.render(text.text, True, text.color)
-
-    def update(self):
-        raise NotImplementedError("update abstract method must be defined in subclass.")
-
-    def event(self, event):
-        raise NotImplementedError("event abstract method must be defined in subclass.")
-
-    def draw(self, screen, scale):
-        raise NotImplementedError("draw abstract method must be defined in subclass.")
-
-    def setup(self):
-        raise NotImplementedError("setup abstract method must be defined in subclass.")
