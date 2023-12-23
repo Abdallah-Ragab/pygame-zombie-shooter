@@ -14,11 +14,11 @@ class Player:
 
     def __init__(
         self,
-        background_music: dict = [],
-        sound_effects: dict = [],
-        background_effects: dict = [],
+        background_music: dict = {},
+        sound_effects: dict = {},
+        background_effects: dict = {},
     ):
-        pygame.mixer.init()
+        # pygame.mixer.init()
 
         self.background_music = background_music
         self.sound_effects = sound_effects
