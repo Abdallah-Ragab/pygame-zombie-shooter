@@ -1,3 +1,4 @@
+![poster](https://github.com/Abdallah-Ragab/pygame-zombie-shooter/assets/93019811/bb208290-29c0-4f6a-a76f-2edbeae2bf65)
 
 # Zombie Strike - A 2D Zombie Shooter Game made with Python and Pygame
 
