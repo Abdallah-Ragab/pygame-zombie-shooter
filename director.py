@@ -36,17 +36,10 @@ class Director:
             self.scene.draw(self.screen, self.scale)
             pygame.display.update()
 
-    def set_scene(self, scene, flush_music = False):
-        print(f"Switching scene to {scene.__class__.__name__}")
-        if hasattr(self.scene, "music") and hasattr(self.scene.music, "pause_all"):
-            print(f"scene {scene.__class__.__name__} has Music Player. Pausing All")
-            self.scene.music.pause_all()
-            if flush_music:
-                self.scene.music.stop_all()
+    def set_scene(self, scene, pause_music = True, flush_music = False):
+        # print(f"Switching scene to {scene.__class__.__name__}")
         self.scene = scene
-        # self.scene.setup()
-        # if hasattr(self.scene, "music") and hasattr(self.scene.music, "unpause_all"):
-        #     self.scene.music.flush()
+
 
     def aspect_ratio_resize(self, event_width, event_height):
         delta_width = (
