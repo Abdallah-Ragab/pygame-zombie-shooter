@@ -7,23 +7,23 @@ from Animation import AnimationController, Animation, SequenceAnimation, Transit
 class Player(Character):
     animation = AnimationController(
         animations=[
-            Animation("idle", "D:\\game assets\\swat 1\\idle", speed=1.5),
-            Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
-            Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
-            Animation("elbow", "D:\\game assets\\swat 1\\elbow", speed=1.5),
-            Animation("kick", "D:\\game assets\\swat 1\\kick", speed=1.5),
-            Animation("die", "D:\\game assets\\swat 1\\die", speed=1.5),
-            Animation("fire", "D:\\game assets\\swat 1\\fire", speed=1.5),
-            Animation("hit 1", "D:\\game assets\\swat 1\\hit 1", speed=1.5),
-            Animation("hit 2", "D:\\game assets\\swat 1\\hit 2", speed=1.5),
+            Animation("idle", "assets/characters/swat 1/idle", speed=1.5),
+            Animation("walk", "assets/characters/swat 1/walk", speed=1.5),
+            Animation("turn", "assets/characters/swat 1/turn", speed=1.5),
+            Animation("elbow", "assets/characters/swat 1/elbow", speed=1.5),
+            Animation("kick", "assets/characters/swat 1/kick", speed=1.5),
+            Animation("die", "assets/characters/swat 1/die", speed=1.5),
+            Animation("fire", "assets/characters/swat 1/fire", speed=1.5),
+            Animation("hit 1", "assets/characters/swat 1/hit 1", speed=1.5),
+            Animation("hit 2", "assets/characters/swat 1/hit 2", speed=1.5),
             Animation(
-                "idle_to_walk", "D:\\game assets\\swat 1\\idle to walk", speed=1.5
+                "idle_to_walk", "assets/characters/swat 1/idle to walk", speed=1.5
             ),
             SequenceAnimation(
                 name="turn_walk",
                 animations=[
-                    Animation("turn", "D:\\game assets\\swat 1\\turn", speed=1.5),
-                    Animation("walk", "D:\\game assets\\swat 1\\walk", speed=1.5),
+                    Animation("turn", "assets/characters/swat 1/turn", speed=1.5),
+                    Animation("walk", "assets/characters/swat 1/walk", speed=1.5),
                 ],
             ),
         ],

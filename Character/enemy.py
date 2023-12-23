@@ -22,20 +22,20 @@ class Enemy(Character):
         self.name = name
         self.animation = AnimationController(
             animations=[
-                Animation("idle", f"D:\\game assets\\{self.name}\\idle", speed=0.5),
-                Animation("walk", f"D:\\game assets\\{self.name}\\walk", speed=0.5),
-                Animation("die", f"D:\\game assets\\{self.name}\\die", speed=0.5),
-                Animation("hit", f"D:\\game assets\\{self.name}\\hit", speed=0.5),
-                Animation("idle_to_walk", f"D:\\game assets\\{self.name}\\idle to walk", speed=0.5),
+                Animation("idle", f"assets/characters/{self.name}/idle", speed=0.5),
+                Animation("walk", f"assets/characters/{self.name}/walk", speed=0.5),
+                Animation("die", f"assets/characters/{self.name}/die", speed=0.5),
+                Animation("hit", f"assets/characters/{self.name}/hit", speed=0.5),
+                Animation("idle_to_walk", f"assets/characters/{self.name}/idle to walk", speed=0.5),
                 SequenceAnimation(
                     name="scream_run",
                     animations=[
-                        Animation("scream", f"D:\\game assets\\{self.name}\\scream"),
-                        Animation("run", f"D:\\game assets\\{self.name}\\run"),
+                        Animation("scream", f"assets/characters/{self.name}/scream"),
+                        Animation("run", f"assets/characters/{self.name}/run"),
                     ],
                 ),
-                Animation("attack 1", f"D:\\game assets\\{self.name}\\attack 1", speed=0.5),
-                Animation("attack 2", f"D:\\game assets\\{self.name}\\attack 2", speed=0.5),
+                Animation("attack 1", f"assets/characters/{self.name}/attack 1", speed=0.5),
+                Animation("attack 2", f"assets/characters/{self.name}/attack 2", speed=0.5),
             ],
             default="idle",
             transitions=[
