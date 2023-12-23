@@ -37,8 +37,11 @@ class Director:
             pygame.display.update()
 
     def set_scene(self, scene, pause_music = True, flush_music = False):
-        # print(f"Switching scene to {scene.__class__.__name__}")
+        from levels import Level
+        if isinstance(self.scene, Level) or issubclass(self.scene.__class__, Level):
+            self._game = self.scene
         self.scene = scene
+
 
 
     def aspect_ratio_resize(self, event_width, event_height):
