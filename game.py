@@ -157,6 +157,105 @@ class Pause(MenuScene):
         """
         self.director.set_scene(self.director._game)
 
+class VictoryScreen(MenuScene):
+    background = pygame.image.load("assets/menus/won.png")
+
+    def __init__(self, director):
+        """
+        Initialize an instance of the class with a director object.
+        @param director - the director object
+        @return None
+        """
+        super().__init__(director)
+
+    def setup(self):
+        """
+        Set up the game menu.
+
+        This method initializes the menu with buttons and their respective callbacks.
+        It also sets the position and spacing of the buttons.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+        self.menu = UIGroup(
+            [
+                Button(
+                    path=["assets/menus/back.png", "assets/menus/back_hover.png"],
+                    callback=self.back_to_main_menu,
+                    scale=0.7,
+                ),
+                Button(
+                    path=["assets/menus/quit.png", "assets/menus/quit_hover.png"],
+                    callback=sys.exit,
+                    scale=0.56,
+                ),
+            ],
+            x=520,
+            y=380,
+            space_y=20,
+        )
+        self.menu.stack_vertical()
+
+    def back_to_main_menu(self):
+        """
+        Return to the main menu by setting the current scene to the MainMenu scene.
+        @param self - the current object
+        @return None
+        """
+        self.director.set_scene(MainMenu(self.director))
+
+class DeathScreen(MenuScene):
+    background = pygame.image.load("assets/menus/lost.png")
+
+    def __init__(self, director):
+        """
+        Initialize an instance of the class with a director object.
+        @param director - the director object
+        @return None
+        """
+        super().__init__(director)
+
+    def setup(self):
+            """
+            Set up the game menu.
+
+            This method initializes the menu UI group and adds buttons to it.
+            The buttons include a back button and a quit button.
+            The back button returns to the main menu when clicked,
+            and the quit button exits the game when clicked.
+            """
+            self.menu = UIGroup(
+                [
+                    Button(
+                        path=["assets/menus/back.png", "assets/menus/back_hover.png"],
+                        callback=self.back_to_main_menu,
+                        scale=0.7,
+                    ),
+                    Button(
+                        path=["assets/menus/quit.png", "assets/menus/quit_hover.png"],
+                        callback=sys.exit,
+                        scale=0.56,
+                    ),
+                ],
+                x=520,
+                y=380,
+                space_y=20,
+            )
+            self.menu.stack_vertical()
+
+    def back_to_main_menu(self):
+        """
+        Return to the main menu by setting the current scene to the MainMenu scene.
+        @param self - the current object
+        @return None
+        """
+        self.director.set_scene(MainMenu(self.director))
+
+
 
 class Intro(Scene):
     """
