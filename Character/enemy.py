@@ -152,10 +152,10 @@ class EnemyManager:
             name = random.choice(self.enemy_types)
             x = (
                 enemy_rate * i
-                + random.randint(-enemy_rate/2, enemy_rate/2)
+                + random.randint(-int(enemy_rate/2), int(enemy_rate/2))
             )
             x = min(x, level_width - enemy_rate)
-            x = max(x, self.scene.director.width)
+            x = max(x, self.scene.director.width*3/4)
 
             # turn x from scene coordinates to camera coordinates
             x = x - self.scene.camera.rect.x

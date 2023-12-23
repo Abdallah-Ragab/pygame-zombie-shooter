@@ -61,7 +61,10 @@ class Level(Scene):
         self.EnemyGroup = CameraAwareGroup()
         self.EnemyGroup.set_camera(self.camera)
 
-        self.EnemyManager = EnemyManager(self, ['zombie girl', 'zombie cop'] , max_enemies=5)
+        num_of_enemies = int(int(self.director.storage.get('level', 1))*5)
+        # num_of_enemies = 5
+
+        self.EnemyManager = EnemyManager(self, ['zombie girl', 'zombie cop'] , max_enemies=num_of_enemies)
 
         self.cursor = Cursor(
             self.Player, min_distance=self.Player.width // 2, max_angle=30, DEBUG=False
