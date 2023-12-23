@@ -1,70 +1,14 @@
 import pygame, sys
+from Scene.MenuScene import MenuScene
+from Scene.Scene import Scene
 
 from Video.player import Video
-from director import Director, Scene
+from director import Director
 
 from music import Player as MusicPlayer
 
 from UI import UIGroup, Button
-from levels import Level
-
-
-class MenuScene(Scene):
-    """
-    A class representing a menu scene that inherits from the Scene class.
-    """
-
-    music = MusicPlayer(
-        background_music={
-            "background": pygame.mixer.Sound("assets/sounds/main_menu_background.mp3")
-        },
-        sound_effects={
-            "purchase": pygame.mixer.Sound("assets/sounds/purchase.mp3"),
-        },
-    )
-
-    def __init__(self, director):
-        """
-        Initialize an instance of the Game class with a director parameter.
-
-        Parameters:
-        director (Director): The director object.
-
-        Returns:
-        None
-        """
-        super().__init__(director)
-        self.music.play_background_music("background", loop=True)
-
-    def update(self):
-        """
-        Update the menu and music components of the game.
-        @return None
-        """
-        self.menu.update()
-        self.music.update()
-
-    def event(self, event):
-        """
-        Handle an event by passing it to the menu object's event handler.
-        @param event - the event to handle
-        """
-        self.menu.event(event)
-
-    def draw(self, screen, window_scale):
-        """
-        Draw the game screen on the given surface with the specified window scale.
-        @param screen - The surface to draw on.
-        @param window_scale - The scale factor for the window.
-        @return None
-        """
-        screen.blit(
-            pygame.transform.scale(
-                self.background, (self.director.width, self.director.height)
-            ),
-            (0, 0),
-        )
-        self.menu.draw(screen)
+from Scene.Level import Level
 
 
 class GamePlay(Level):
@@ -72,42 +16,44 @@ class GamePlay(Level):
     This is a class called `GamePlay` that inherits from `Level`. It has a `music` attribute which is an instance of `MusicPlayer`. The `MusicPlayer` is initialized with a dictionary of sound effects, where each sound effect is associated with a key. The sound effects are loaded from specific file paths.
     """
 
-    music = MusicPlayer(
-        sound_effects={
-            "shot": pygame.mixer.Sound("assets/sounds/shot.wav"),
-            "empty_clip": pygame.mixer.Sound("assets/sounds/empty_clip.wav"),
-            "zombie_attack": pygame.mixer.Sound("assets/sounds/zombie_attack.wav"),
-            "zombie_attack_2": pygame.mixer.Sound("assets/sounds/zombie_attack_2.wav"),
-            "death": pygame.mixer.Sound("assets/sounds/death.wav"),
-            "perk": pygame.mixer.Sound("assets/sounds/perk.mp3"),
-        },
-        background_effects={
-            "zombie_background_effect_1": pygame.mixer.Sound(
-                "assets/sounds/zombie_background_effect_1.mp3"
-            ),
-            "zombie_background_effect_2": pygame.mixer.Sound(
-                "assets/sounds/zombie_background_effect_2.wav"
-            ),
-            "zombie_background_effect_3": pygame.mixer.Sound(
-                "assets/sounds/zombie_background_effect_3.wav"
-            ),
-            "empty_background_effect": pygame.mixer.Sound(
-                "assets/sounds/empty_background_effect.wav"
-            ),
-        },
-        background_music={
-            "background_music_1": pygame.mixer.Sound(
-                "assets/sounds/background_music_1.wav"
-            ),
-        },
-    )
-
     def setup(self):
         """
         Perform the setup for the game.
         @return The result of the superclass's setup method.
         """
         self.map = self.director.storage.get("map", "city")
+        self.music = MusicPlayer(
+            sound_effects={
+                "shot": pygame.mixer.Sound("assets/sounds/shot.wav"),
+                "empty_clip": pygame.mixer.Sound("assets/sounds/empty_clip.wav"),
+                "zombie_attack": pygame.mixer.Sound("assets/sounds/zombie_attack.wav"),
+                "zombie_attack_2": pygame.mixer.Sound(
+                    "assets/sounds/zombie_attack_2.wav"
+                ),
+                "death": pygame.mixer.Sound("assets/sounds/death.wav"),
+                "perk": pygame.mixer.Sound("assets/sounds/perk.mp3"),
+            },
+            background_effects={
+                "zombie_background_effect_1": pygame.mixer.Sound(
+                    "assets/sounds/zombie_background_effect_1.mp3"
+                ),
+                "zombie_background_effect_2": pygame.mixer.Sound(
+                    "assets/sounds/zombie_background_effect_2.wav"
+                ),
+                "zombie_background_effect_3": pygame.mixer.Sound(
+                    "assets/sounds/zombie_background_effect_3.wav"
+                ),
+                "empty_background_effect": pygame.mixer.Sound(
+                    "assets/sounds/empty_background_effect.wav"
+                ),
+            },
+            background_music={
+                "background_music_1": pygame.mixer.Sound(
+                    "assets/sounds/background_music_1.wav"
+                ),
+            },
+        )
+
         self.music.loop_background_effect(
             [
                 "zombie_background_effect_1",
@@ -152,6 +98,7 @@ class Pause(MenuScene):
     """
     A class representing the pause menu scene in a game.
     """
+
     background = pygame.image.load("assets/menus/pause.png")
 
     def __init__(self, director):
@@ -220,6 +167,7 @@ class Intro(Scene):
     @method skip - allows the user to skip the intro by seeking to the next key moment in the video
     @return None
     """
+
     def __init__(self, director):
         """
         Initialize an instance of the class with a director object.
@@ -289,6 +237,7 @@ class MainMenu(MenuScene):
     """
     A class representing the main menu scene in a game. Inherits from the MenuScene class.
     """
+
     background = pygame.image.load("assets/menus/main_menu.png")
 
     def __init__(self, director):
@@ -341,6 +290,7 @@ class SelectMap(MenuScene):
     @method setup - Sets up the menu with buttons for map selection.
     @method set_map - Sets the selected map in the game storage.
     """
+
     background = pygame.image.load("assets/menus/map_menu.png")
 
     def __init__(self, director):
@@ -396,6 +346,7 @@ class SelectLevel(MenuScene):
     @method setup - Sets up the level menu by creating buttons and arranging them in a menu group.
     @method set_level - Sets the selected level in the game storage.
     """
+
     background = pygame.image.load("assets/menus/level_menu.png")
 
     def __init__(self, director):
@@ -449,6 +400,7 @@ class PerkMenu(MenuScene):
     """
     A class representing a menu scene for perks in a game.
     """
+
     background = pygame.image.load("assets/menus/perks_menu.png")
 
     def __init__(self, director):
@@ -555,6 +507,7 @@ def main():
     @return None
     """
     pygame.init()
+    pygame.mixer.init()
     director = Director()
     director.set_scene(Intro(director))
     director.setup()
