@@ -30,6 +30,20 @@ class HUD(UIGroup):
             ),
             Ammo(self.Player, path="assets/hud/ammo.png"),
             Money(self.Player, path="assets/hud/money.png"),
+            UIGroup(
+                [
+                    Button(path="assets/hud/ammo_perk.png",
+                           callback=self.Player.use_ammo_perk),
+                    Button(path="assets/hud/health_perk.png",
+                            callback=self.Player.use_health_perk),
+                    Button(path="assets/hud/multiplier_perk.png",
+                            callback=self.Player.use_multiplier_perk),
+                ],
+                scale=1,
+                y=0,
+                space_x=0,
+                padding_x=20,
+            )
         ]
         super().__init__(
             elements,
@@ -54,13 +68,12 @@ class HUD(UIGroup):
     def position(self):
         super().position()
 
-        ammo = next(filter(lambda element: isinstance(element, Ammo), self.elements))
-        avatar = next(
-            filter(lambda element: isinstance(element, Avatar), self.elements)
-        )
-        elements = list(
-            filter(lambda element: not isinstance(element, Ammo), self.elements)
-        )
+        avatar = self.elements[0]
+        health_bar = self.elements[1]
+        ammo = self.elements[2]
+        money = self.elements[3]
+
+        elements = [avatar, health_bar, money]
 
         self.stack_vertical(elements, align="right")
 
@@ -70,6 +83,11 @@ class HUD(UIGroup):
         money = next(filter(lambda element: isinstance(element, Money), self.elements))
         money.set_x(money.x - 12)
         money.set_y(money.y - 10)
+
+        perks = self.elements[4]
+        perks.stack_horizontal()
+        perks.set_y(30)
+
 
 
 class Avatar(UIElement):
@@ -165,8 +183,10 @@ class Money(UIElement):
         self.player = player
 
     def draw(self, screen):
+        money = self.player.scene.director.storage.get("money", 0)
         super().draw(screen)
-        text = self.font.render(str(1050), True, (255, 255, 255))
+        text = self.font.render(str(money), True, (255, 255, 255))
         text_rect = text.get_rect()
         text_rect.center = (self.x + self.width * 0.45, self.y + self.height * 0.52)
         screen.blit(text, text_rect)
+
