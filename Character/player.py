@@ -133,7 +133,8 @@ class Player(Character):
         self.moving = False
         if event.button == 1:
             if self.bullets > 0:
-                self.shoot()
+                if self.scene.cursor.rect.collidepoint(event.pos):
+                    self.shoot()
             else:
                 self.scene.music.play_sound_effect("empty_clip")
         elif event.button == 3:
@@ -241,6 +242,8 @@ class Player(Character):
     def enemies_colliding_cursor(self):
         enemies = []
         cursor = self.scene.cursor
+        print("cursor:", cursor.rect)
+        print("mouse:", pygame.mouse.get_pos())
         enemy_group = self.scene.EnemyGroup.sprites()
         for enemy in enemy_group:
             print("enemy:", enemy.rect, "cursor:", cursor.rect)
@@ -256,3 +259,33 @@ class Player(Character):
             if enemy.rect.colliderect(self.rect):
                 enemies.append(enemy)
         return enemies
+
+    def use_ammo_perk(self):
+        owned = int(self.scene.director.storage.get("ammo", 0))
+        if owned > 0:
+            self.bullets = self.max_bullets
+            self.scene.director.storage.set("ammo", owned - 1)
+            self.scene.music.play_sound_effect("perk")
+            print("ammo perk used")
+        else:
+            print("ammo perk not owned")
+
+    def use_health_perk(self):
+        owned = int(self.scene.director.storage.get("health", 0))
+        if owned > 0:
+            self.health = self.max_health
+            self.scene.director.storage.set("health", owned - 1)
+            self.scene.music.play_sound_effect("perk")
+            print("health perk used")
+        else:
+            print("health perk not owned")
+
+    def use_multiplier_perk(self):
+        owned = int(self.scene.director.storage.get("multiplier", 0))
+        if owned > 0:
+            self.scene.director.storage.set("multiplier", owned - 1)
+            self.scene.music.play_sound_effect("perk")
+            print("multiplier perk used")
+        else:
+            print("multiplier perk not owned")
+
