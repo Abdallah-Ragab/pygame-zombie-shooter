@@ -420,9 +420,8 @@ class SelectMap(MenuScene):
             ],
             space_x=20,
             y=200,
+            x=430
         )
-        self.menu.stack_horizontal()
-        self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
         self.menu.stack_horizontal()
 
     def set_map(self, map):
@@ -480,9 +479,8 @@ class SelectLevel(MenuScene):
             ],
             space_x=20,
             y=200,
+            x=420
         )
-        self.menu.stack_horizontal()
-        self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
         self.menu.stack_horizontal()
 
     def set_level(self, level):
