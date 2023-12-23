@@ -16,6 +16,36 @@ from UI import HUD, Avatar, HealthBar, Ammo, Money, UIElement, UIGroup, Button
 from levels import Level
 
 
+class MenuScene(Scene):
+    music = MusicPlayer(
+        background_music={
+            "background": pygame.mixer.Sound("assets/sounds/main_menu_background.mp3")
+        },
+        sound_effects={
+            "purchase": pygame.mixer.Sound("assets/sounds/purchase.mp3"),
+        },
+    )
+
+    def __init__(self, director):
+        Scene.__init__(self, director)
+        self.music.loop_background_music("background", loop=True)
+
+    def update(self):
+        self.menu.update()
+
+    def event(self, event):
+        self.menu.event(event)
+
+    def draw(self, screen, window_scale):
+        screen.blit(
+            pygame.transform.scale(
+                self.background, (self.director.width, self.director.height)
+            ),
+            (0, 0),
+        )
+        self.menu.draw(screen)
+
+
 class GamePlay(Level):
     music = MusicPlayer(
         sound_effects={
@@ -138,7 +168,7 @@ class Intro(Scene):
         self.video.draw(screen, (0, 0))
 
     def finish(self):
-        self.director.set_scene(GamePlay(self.director))
+        self.director.set_scene(MainMenu(self.director))
         self.video.close()
 
     def skip(self):
@@ -153,17 +183,11 @@ class Intro(Scene):
         )
 
 
-class MainMenu(Scene):
+class MainMenu(MenuScene):
     background = pygame.image.load("assets/menus/main_menu.png")
 
     def __init__(self, director):
         Scene.__init__(self, director)
-
-    def start_game(self):
-        self.director.set_scene(GamePlay(self.director), flush_music=True)
-
-    def map_menu(self):
-        self.director.set_scene(SelectMap(self.director), flush_music=True)
 
     def setup(self):
         self.menu = UIGroup(
@@ -185,33 +209,11 @@ class MainMenu(Scene):
         )
         self.menu.stack_vertical()
 
-        self.music = MusicPlayer(
-            background_music={
-                "background": pygame.mixer.Sound(
-                    "assets/sounds/main_menu_background.mp3"
-                )
-            }
-        )
-        print("playing background")
-        self.music.play_background_music("background")
-
-    def update(self):
-        self.menu.update()
-
-    def event(self, event):
-        self.menu.event(event)
-
-    def draw(self, screen, window_scale):
-        screen.blit(
-            pygame.transform.scale(
-                self.background, (self.director.width, self.director.height)
-            ),
-            (0, 0),
-        )
-        self.menu.draw(screen)
+    def map_menu(self):
+        self.director.set_scene(SelectMap(self.director), pause_music=False)
 
 
-class SelectMap(Scene):
+class SelectMap(MenuScene):
     background = pygame.image.load("assets/menus/map_menu.png")
 
     def __init__(self, director):
@@ -238,37 +240,12 @@ class SelectMap(Scene):
         self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
         self.menu.stack_horizontal()
 
-        self.music = MusicPlayer(
-            background_music={
-                "background": pygame.mixer.Sound(
-                    "assets/sounds/main_menu_background.mp3"
-                )
-            }
-        )
-        print("playing background")
-        self.music.play_background_music("background")
-
-    def update(self):
-        self.menu.update()
-
-    def event(self, event):
-        self.menu.event(event)
-
-    def draw(self, screen, window_scale):
-        screen.blit(
-            pygame.transform.scale(
-                self.background, (self.director.width, self.director.height)
-            ),
-            (0, 0),
-        )
-        self.menu.draw(screen)
-
     def set_map(self, map):
         self.director.storage.set("map", map)
         self.director.set_scene(SelectLevel(self.director), flush_music=True)
 
 
-class SelectLevel(Scene):
+class SelectLevel(MenuScene):
     background = pygame.image.load("assets/menus/level_menu.png")
 
     def __init__(self, director):
@@ -300,37 +277,12 @@ class SelectLevel(Scene):
         self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
         self.menu.stack_horizontal()
 
-        self.music = MusicPlayer(
-            background_music={
-                "background": pygame.mixer.Sound(
-                    "assets/sounds/main_menu_background.mp3"
-                )
-            }
-        )
-        self.music.play_background_music("background")
-
     def set_level(self, level):
         self.director.storage.set("level", level)
         self.director.set_scene(PerkMenu(self.director))
 
-    def update(self):
-        self.menu.update()
 
-    def event(self, event):
-        self.menu.event(event)
-
-
-    def draw(self, screen, window_scale):
-        screen.blit(
-            pygame.transform.scale(
-                self.background, (self.director.width, self.director.height)
-            ),
-            (0, 0),
-        )
-        self.menu.draw(screen)
-
-
-class PerkMenu(Scene):
+class PerkMenu(MenuScene):
     background = pygame.image.load("assets/menus/perks_menu.png")
 
     def __init__(self, director):
@@ -378,7 +330,7 @@ class PerkMenu(Scene):
                     ],
                     space_x=20,
                     x=800,
-                    y = 500
+                    y=500,
                 ),
             ],
             space_x=20,
@@ -395,37 +347,6 @@ class PerkMenu(Scene):
         # self.menu.stack_horizontal(perks)
         self.menu.x = self.director.width / 2 - self.menu.rect.width / 2
         buttons.stack_vertical()
-
-        self.music = MusicPlayer(
-            background_music={
-                "background": pygame.mixer.Sound(
-                    "assets/sounds/main_menu_background.mp3"
-                )
-            },
-            sound_effects={
-                "purchase": pygame.mixer.Sound("assets/sounds/purchase.mp3"),
-            },
-        )
-        self.music.play_background_music("background")
-
-    def set_level(self, level):
-        self.director.storage.set("level", level)
-        self.director.set_scene(GamePlay(self.director))
-
-    def update(self):
-        self.menu.update()
-
-    def event(self, event):
-        self.menu.event(event)
-
-    def draw(self, screen, window_scale):
-        screen.blit(
-            pygame.transform.scale(
-                self.background, (self.director.width, self.director.height)
-            ),
-            (0, 0),
-        )
-        self.menu.draw(screen)
 
     def buy_perk(self, perk):
         price = 100
@@ -446,7 +367,7 @@ class PerkMenu(Scene):
 def main():
     pygame.init()
     director = Director()
-    director.set_scene(MainMenu(director))
+    director.set_scene(Intro(director))
     director.setup()
     director.loop()
     pygame.quit()
