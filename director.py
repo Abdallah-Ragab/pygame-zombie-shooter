@@ -44,9 +44,9 @@ class Director:
             if flush_music:
                 self.scene.music.stop_all()
         self.scene = scene
-        self.scene.setup()
-        if hasattr(self.scene, "music") and hasattr(self.scene.music, "unpause_all"):
-            self.scene.music.flush()
+        # self.scene.setup()
+        # if hasattr(self.scene, "music") and hasattr(self.scene.music, "unpause_all"):
+        #     self.scene.music.flush()
 
     def aspect_ratio_resize(self, event_width, event_height):
         delta_width = (
