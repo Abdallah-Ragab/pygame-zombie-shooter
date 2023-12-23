@@ -115,39 +115,43 @@ class GamePlay(Level):
         return super().update()
 
 
-class Pause(Scene):
+class Pause(MenuScene):
+    background = pygame.image.load("assets/menus/pause.png")
     def __init__(self, director):
         super().__init__(director)
-        self.pause_text = pygame.font.SysFont("Arial", 50).render(
-            "Pause", True, (255, 255, 255)
-        )
-        window_center = (self.director.width / 2, self.director.height / 2)
 
-    def update(self):
-        self.hud.update()
+    def setup(self):
+        self.menu = UIGroup(
+            [
+                Button(
+                    path=["assets/menus/continue.png", "assets/menus/continue_hover.png"],
+                    callback=self.return_to_game,
+                    scale=0.7,
+                ),
+                Button(
+                    path=["assets/menus/back.png", "assets/menus/back_hover.png"],
+                    callback=self.back_to_main_menu,
+                    scale=0.7,
+                ),
+                Button(
+                    path=["assets/menus/quit.png", "assets/menus/quit_hover.png"],
+                    callback=sys.exit,
+                    scale=0.56,
+                ),
+            ],
+            x=520,
+            y=380,
+            space_y=20,
+        )
+        self.menu.stack_vertical()
 
-    def event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-            self.director.set_scene(Game(self.director))
+    def back_to_main_menu(self):
+        self.director.set_scene(MainMenu(self.director))
 
-    def draw(self, screen, window_scale):
-        background = pygame.Rect(
-            (0, 0),
-            (self.director.width * window_scale, self.director.height * window_scale),
-        )
-        pygame.draw.rect(screen, (0, 0, 255), background)
-        # show the pause text at the center of the screen
-        screen.blit(
-            self.pause_text,
-            (
-                self.director.width / 2 - self.pause_text.get_width() / 2,
-                self.director.height / 2 - self.pause_text.get_height() / 2,
-            ),
-        )
-        self.pause_text.get_rect().center = (
-            self.director.width / 2,
-            self.director.height / 2,
-        )
+    def return_to_game(self):
+        self.director.set_scene(self.director._game)
+
+
 
 
 class Intro(Scene):
@@ -369,7 +373,7 @@ class PerkMenu(MenuScene):
 def main():
     pygame.init()
     director = Director()
-    director.set_scene(Intro(director))
+    director.set_scene(Pause(director))
     director.setup()
     director.loop()
     pygame.quit()
