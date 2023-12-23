@@ -117,15 +117,18 @@ class Level(Scene):
 
         self.PlayerGroup.sprite.event(event)
         self.EnemyGroup.event(event)
+        self.hud.event(event)
 
     def check_win_condition(self):
         """
         Checks the win condition of the level and sets the appropriate scene if the player wins or loses.
         """
         if self.Player.DEAD:
-            self.director.set_scene(GameOver(self.director))
+            from game import DeathScreen
+            self.director.set_scene(DeathScreen(self.director))
         elif self.EnemyManager.all_dead():
-            self.director.set_scene(Win(self.director))
+            from game import VictoryScreen
+            self.director.set_scene(VictoryScreen(self.director))
 
     def reward_player(self):
         """
@@ -134,134 +137,3 @@ class Level(Scene):
         money = self.director.storage.get("money", 0)
         money += 100
         self.director.storage.set("money", money)
-
-
-class GameOver(Scene):
-    def __init__(self, director):
-        """
-        Initializes a GameOver object.
-
-        Args:
-            director (Director): The game director object.
-        """
-        Scene.__init__(self, director)
-
-    def setup(self):
-        """
-        Set up the GameOver scene.
-        """
-        self.game_over_text = pygame.font.SysFont("Arial", 50).render(
-            "Game Over", True, (255, 255, 255)
-        )
-        window_center = (self.director.width / 2, self.director.height / 2)
-
-    def update(self):
-        """
-        Update the GameOver scene.
-        """
-        pass
-
-    def event(self, event):
-        """
-        Handle events in the GameOver scene.
-
-        Args:
-            event (pygame.event.Event): The event to handle.
-        """
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            from game import MainMenu
-            self.director.set_scene(MainMenu(self.director))
-
-    def draw(self, screen, window_scale):
-        """
-        Draw the GameOver scene.
-
-        Args:
-            screen (pygame.Surface): The surface to draw on.
-            window_scale (float): The scale factor for the window.
-        """
-        """
-        Draw the GameOver scene.
-
-        Args:
-            screen (pygame.Surface): The screen surface to draw on.
-            window_scale (float): The scale factor for the window size.
-        """
-        background = pygame.Rect(
-            (0, 0),
-            (self.director.width * window_scale, self.director.height * window_scale),
-        )
-        pygame.draw.rect(screen, (0, 0, 255), background)
-        # show the pause text at the center of the screen
-        screen.blit(
-            self.game_over_text,
-            (
-                self.director.width / 2 - self.game_over_text.get_width() / 2,
-                self.director.height / 2 - self.game_over_text.get_height() / 2,
-            ),
-        )
-        self.game_over_text.get_rect().center = (
-            self.director.width / 2,
-            self.director.height / 2,
-        )
-
-class Win(Scene):
-    def __init__(self, director):
-        """
-        Initializes a Win scene.
-
-        Args:
-            director (Director): The game director.
-        """
-        Scene.__init__(self, director)
-
-    def setup(self):
-        """
-        Set up the Win scene.
-        """
-        self.win_text = pygame.font.SysFont("Arial", 50).render(
-            "You Win!", True, (255, 255, 255)
-        )
-        window_center = (self.director.width / 2, self.director.height / 2)
-
-    def update(self):
-        """
-        Update the Win scene.
-        """
-        pass
-
-    def event(self, event):
-        """
-        Handle events in the Win scene.
-
-        Args:
-            event (pygame.event.Event): The event to handle.
-        """
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            from game import MainMenu
-            self.director.set_scene(MainMenu(self.director))
-    def draw(self, screen, window_scale):
-        """
-        Draw the Win scene.
-
-        Args:
-            screen (pygame.Surface): The screen to draw on.
-            window_scale (float): The scale factor for the window.
-        """
-        background = pygame.Rect(
-            (0, 0),
-            (self.director.width * window_scale, self.director.height * window_scale),
-        )
-        pygame.draw.rect(screen, (0, 0, 255), background)
-        # show the pause text at the center of the screen
-        screen.blit(
-            self.win_text,
-            (
-                self.director.width / 2 - self.win_text.get_width() / 2,
-                self.director.height / 2 - self.win_text.get_height() / 2,
-            ),
-        )
-        self.win_text.get_rect().center = (
-            self.director.width / 2,
-            self.director.height / 2,
-        )
