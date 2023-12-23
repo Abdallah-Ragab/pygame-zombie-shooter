@@ -73,6 +73,11 @@ class UIGroup:
         for element in elements:
             element.draw(screen)
 
+    def event(self, event):
+        for element in self.elements:
+            if hasattr(element, "event"):
+                element.event(event)
+
     def stack_vertical(self, elements=None, align="center"):
 
         y = self.y + self.padding_y
