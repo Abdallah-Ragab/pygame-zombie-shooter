@@ -49,7 +49,6 @@ class Button(UIElement):
         self.height = self.image.get_height()
 
     def event(self, event):
-        print("EVENT got called")
         if event.type == pygame.MOUSEBUTTONUP:
             if self.is_hovered and self.callback:
                 self.callback()
